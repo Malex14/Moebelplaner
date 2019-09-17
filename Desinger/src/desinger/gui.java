@@ -55,6 +55,7 @@ import org.eclipse.swt.events.DragDetectEvent;
 import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 @SuppressWarnings("unused")
 public class gui {
@@ -197,11 +198,16 @@ public class gui {
 		
 		Button btnCreateTisch = formToolkit.createButton(grpMbel, "Tisch", SWT.NONE);
 		
+		Button btnNewButton = new Button(grpMbel, SWT.NONE);
+		formToolkit.adapt(btnNewButton, true, true);
+		btnNewButton.setText("New Button");
+		
 		
 		Button btnCreateSchrank = formToolkit.createButton(grpMbel, "Schrank", SWT.NONE);
 		
 		
 		Button btnCreateStuhl = formToolkit.createButton(grpMbel, "New Button", SWT.NONE);
+		
 		
 		FormData fd_scale = new FormData();
 		fd_scale.top = new FormAttachment(grpMbel, 118);
