@@ -15,7 +15,6 @@ int rotation;
 		width = 50;
 		height = 50;
 		angle = 0;
-		color = new Color(device, 0,0,0);
 	}
 	
 	
