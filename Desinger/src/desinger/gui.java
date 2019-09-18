@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 
 import java.io.ObjectInputStream.GetField;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -105,7 +106,7 @@ public class gui {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		TestObjekt[] testObjektArray = new TestObjekt[100000];
+		ArrayList<TestObjekt> testObjektArray = new ArrayList<TestObjekt>();
 		
 		shlMbelplaner = new Shell();
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
@@ -199,6 +200,12 @@ public class gui {
 		Button btnCreateTisch = formToolkit.createButton(grpMbel, "Tisch", SWT.NONE);
 		
 		Button btnNewButton = new Button(grpMbel, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				testObjektArray.get(testObjektArray.size()-1).hide(getCanvas());
+			}
+		});
 		formToolkit.adapt(btnNewButton, true, true);
 		btnNewButton.setText("New Button");
 		
@@ -302,8 +309,9 @@ public class gui {
 			public void widgetSelected(SelectionEvent e) {
 				newItem dialog = new newItem(shlMbelplaner,SWT.NONE);
 				if(testObjektIndex < 99900) {
-				testObjektArray[testObjektIndex] = new TestObjekt();
-				testObjektArray[testObjektIndex].testMethode();
+				testObjektArray.add(new TestObjekt(getCanvas()));
+				testObjektArray.get(testObjektArray.size()-1).testMethode();
+				
 				testObjektIndex++;
 				}else {
 					 MessageBox messageBox = new MessageBox(shlMbelplaner, SWT.ICON_ERROR);

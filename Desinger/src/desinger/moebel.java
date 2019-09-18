@@ -16,36 +16,45 @@ protected int width;
 protected int height;
 protected float angle;
 protected Device device = Display.getCurrent();
+PaintListener paintListener;
+Canvas canvas;
 
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
 		y = new_y;
+		canvas.redraw();
 	}
 	
 	void setAngle(int new_angle) {
 		angle = new_angle;
+		canvas.redraw();
 	}
 	
 	void setDimensions(int new_width, int new_height) {
 		height = new_height;
 		width = new_width;
+		canvas.redraw();
 	}
 	
 	
 	void setX(int new_x) {
 		x = new_x;
+		canvas.redraw();
 	}
 	
 	void setY(int new_y) {
 		y = new_y;
+		canvas.redraw();
 	}
 	
 	void setWidth(int new_width) {
 		width = new_width;
+		canvas.redraw();
 	}
 
 	void setHeight(int new_height) {
 		height = new_height;
+		canvas.redraw();
 	}
 	
 	int getX() {
@@ -72,14 +81,12 @@ protected Device device = Display.getCurrent();
 		System.out.println(this.toString());
 	}
 	
-	void draw() {
-		
-	}
-	
-	void draw(Image image, Canvas canvas) {
-		canvas.addPaintListener(new PaintListener() {
+	void draw(Image image) {
+		try {
+		canvas.removePaintListener(paintListener);
+		}catch(Exception e) {}
+		canvas.addPaintListener(paintListener = new PaintListener() {
 			 public void paintControl(PaintEvent e) {
-				
 				 Transform transform = new Transform(device);
 				 transform.translate(x, y);
 				 transform.rotate((float)angle);
@@ -88,9 +95,14 @@ protected Device device = Display.getCurrent();
 				 e.gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height);
 				 transform.dispose();
 			 }
-			 
 		});
 		canvas.redraw();
 	}
 	
+	void hide(Canvas canvas) {
+		try {
+			canvas.removePaintListener(paintListener);
+		}catch(Exception e) {}
+		canvas.redraw();
+	}
 }
