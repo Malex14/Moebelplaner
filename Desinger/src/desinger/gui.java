@@ -197,17 +197,20 @@ public class gui {
 		formToolkit.paintBordersFor(grpMbel);
 		grpMbel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		Button btnCreateTisch = formToolkit.createButton(grpMbel, "Tisch", SWT.NONE);
+		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
 		
 		Button btnNewButton = new Button(grpMbel, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				try {
 				testObjektArray.get(testObjektArray.size()-1).hide(getCanvas());
+				testObjektArray.remove(testObjektArray.size()-1);
+				}catch(Exception e1) {}
 			}
 		});
 		formToolkit.adapt(btnNewButton, true, true);
-		btnNewButton.setText("New Button");
+		btnNewButton.setText("Letztes Objekt l\u00F6schen");
 		
 		
 		Button btnCreateSchrank = formToolkit.createButton(grpMbel, "Schrank", SWT.NONE);
@@ -304,7 +307,7 @@ public class gui {
 		
 		//END OF AUTOGENERATION
 		
-		btnCreateTisch.addSelectionListener(new SelectionAdapter() {
+		btntestObjekt.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				newItem dialog = new newItem(shlMbelplaner,SWT.NONE);

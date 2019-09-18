@@ -15,7 +15,8 @@ int rotation;
 		width = 50;
 		height = 50;
 		angle = (float)(Math.random()* 360);
-		draw(new Image(device, "./assets/moebel/testObjekt.png"));
+		image = new Image(device, "./assets/moebel/testObjekt.png");
+		draw();
 	}
 	
 	

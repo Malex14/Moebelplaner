@@ -18,6 +18,7 @@ protected float angle;
 protected Device device = Display.getCurrent();
 PaintListener paintListener;
 Canvas canvas;
+Image image;
 
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
@@ -81,7 +82,7 @@ Canvas canvas;
 		System.out.println(this.toString());
 	}
 	
-	void draw(Image image) {
+	void draw() {
 		try {
 		canvas.removePaintListener(paintListener);
 		}catch(Exception e) {}
