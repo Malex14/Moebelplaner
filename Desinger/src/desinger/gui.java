@@ -168,6 +168,24 @@ public class gui {
 		MenuItem mntmGrenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
 		mntmGrenWerkzeug.setText("Gr\u00F6\u00DFen Werkzeug");
 		
+		MenuItem mntmMbel = new MenuItem(menu, SWT.CASCADE);
+		mntmMbel.setText("M\u00F6bel");
+		
+		Menu menu_3 = new Menu(mntmMbel);
+		mntmMbel.setMenu(menu_3);
+		
+		MenuItem mntmLetztesMbelLoschen = new MenuItem(menu_3, SWT.NONE);
+		mntmLetztesMbelLoschen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					testObjektArray.get(testObjektArray.size()-1).hide(getCanvas());
+					testObjektArray.remove(testObjektArray.size()-1);
+					}catch(Exception e1) {}
+			}
+		});
+		mntmLetztesMbelLoschen.setText("letztes M\u00F6bel loschen");
+		
 		TabFolder tabFolder = new TabFolder(shlMbelplaner, SWT.NONE);
 		FormData fd_tabFolder = new FormData();
 		fd_tabFolder.bottom = new FormAttachment(100);
