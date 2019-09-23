@@ -1,5 +1,6 @@
 package desinger;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Device;
@@ -7,6 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TreeItem;
 
 public class moebel {
 
@@ -19,6 +21,8 @@ protected Device device = Display.getCurrent();
 PaintListener paintListener;
 Canvas canvas;
 Image image;
+TreeItem trtm;
+String name;
 
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
@@ -82,7 +86,8 @@ Image image;
 		System.out.println(this.toString());
 	}
 	
-	void draw() {
+	void draw(boolean... highlighted) {
+		boolean hightlight = highlighted.length > 0 ? highlighted[0] : false; 
 		try {
 		canvas.removePaintListener(paintListener);
 		}catch(Exception e) {}
@@ -94,6 +99,9 @@ Image image;
 				 transform.translate(-(width/2), -(height/2));
 				 e.gc.setTransform(transform);
 				 e.gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height);
+				 if (hightlight) {
+						System.out.println("high");
+				}
 				 transform.dispose();
 			 }
 		});
@@ -105,5 +113,15 @@ Image image;
 			canvas.removePaintListener(paintListener);
 		}catch(Exception e) {}
 		canvas.redraw();
+	}
+	
+	void addToTree(TreeItem treeItem) {
+		trtm = new TreeItem(treeItem,SWT.NONE);
+		if (name != null) { 
+		trtm.setText(name);
+		} else {
+			trtm.setText(this.toString());
+		}
+		
 	}
 }

@@ -67,6 +67,8 @@ public class gui {
 	static Canvas canvas;
 	private Text text;
 	private Text text_1;
+	private Tree tree;
+	private static TreeItem trtmMoebel;
 
 	/**
 	 * Launch the application.
@@ -244,11 +246,11 @@ public class gui {
 		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setText("Objekte");
 		
-		Tree tree = new Tree(tabFolder, SWT.BORDER);
+		tree = new Tree(tabFolder, SWT.BORDER);
 		tbtmNewItem.setControl(tree);
 		formToolkit.paintBordersFor(tree);
 		
-		TreeItem trtmMoebel = new TreeItem(tree, SWT.NONE);
+		trtmMoebel = new TreeItem(tree, SWT.NONE);
 		trtmMoebel.setText("M\u00F6bel");
 		
 		
@@ -346,5 +348,11 @@ public class gui {
 	
 	public static Canvas getCanvas() {
 		return canvas;
+	}
+	public Tree getTree() {
+		return tree;
+	}
+	public static TreeItem gettrtmMoebel() {
+		return trtmMoebel;
 	}
 }
