@@ -16,7 +16,7 @@ int rotation;
 		height = 50;
 		angle = (float)(Math.random()* 360);
 		image = new Image(device, "./assets/moebel/testObjekt.png");
-		draw();
+		draw(Math.random()>0.5?true:false);
 		addToTree(gui.gettrtmMoebel());
 	}
 	

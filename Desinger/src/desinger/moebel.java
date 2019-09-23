@@ -3,6 +3,7 @@ package desinger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Transform;
@@ -100,7 +101,11 @@ String name;
 				 e.gc.setTransform(transform);
 				 e.gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height);
 				 if (hightlight) {
-						System.out.println("high");
+						e.gc.setForeground(new Color(device,255,0,0));
+						e.gc.setLineWidth(2);
+						e.gc.drawLine(0, 0, height, width);
+						e.gc.drawLine(0, height, width, 0);
+						e.gc.drawRectangle(0, 0, width, height);
 				}
 				 transform.dispose();
 			 }
@@ -123,5 +128,9 @@ String name;
 			trtm.setText(this.toString());
 		}
 		
+	}
+	
+	void removeFromTree() {
+		trtm = null;
 	}
 }
