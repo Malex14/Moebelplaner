@@ -1,6 +1,7 @@
 package desinger;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.omg.CORBA.portable.ValueOutputStream;
@@ -57,6 +58,10 @@ import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 
 @SuppressWarnings("unused")
 public class gui {
@@ -308,6 +313,12 @@ public class gui {
 		btnbernehmen.setText("\u00DCbernehmen");
 		
 		canvas = new Canvas(shlMbelplaner, SWT.BORDER);
+		canvas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+		System.out.println(getCanvas().getListeners(SWT.Paint));
+			}
+		});
 		
 		
 		fd_tabFolder.right = new FormAttachment(canvas, -6);
