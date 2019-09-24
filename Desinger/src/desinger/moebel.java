@@ -103,7 +103,7 @@ String name;
 				 if (hightlight) {
 						e.gc.setForeground(new Color(device,255,0,0));
 						e.gc.setLineWidth(2);
-						e.gc.drawLine(0, 0, height, width);
+						e.gc.drawLine(0, 0, width, height);
 						e.gc.drawLine(0, height, width, 0);
 						e.gc.drawRectangle(0, 0, width, height);
 				}
