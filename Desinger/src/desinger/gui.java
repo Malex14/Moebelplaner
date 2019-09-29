@@ -319,12 +319,10 @@ public class gui {
 			public void mouseDoubleClick(MouseEvent e) {
 				moebel moebel = null;
 				for (TestObjekt testObjekt : testObjektArray) {
-					if(testObjekt.hasPaintListener()){
-						if(testObjekt.contains(new java.awt.Point(e.x,e.y))) {moebel = testObjekt;} else {}
+					if(testObjekt.hasPaintListener() && testObjekt.contains(new java.awt.Point(e.x,e.y))) moebel = testObjekt;
 						testObjekt.draw();
 					}
-				}
-				if(moebel != null) {moebel.draw(true);}
+				if(moebel != null) moebel.draw(true);
 			}
 		});
 		
@@ -350,17 +348,8 @@ public class gui {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				newItem dialog = new newItem(shlMbelplaner,SWT.NONE);
-				if(testObjektIndex < 99900) {
 				testObjektArray.add(new TestObjekt(getCanvas()));
 				testObjektArray.get(testObjektArray.size()-1).testMethode();
-				
-				testObjektIndex++;
-				}else {
-					 MessageBox messageBox = new MessageBox(shlMbelplaner, SWT.ICON_ERROR);
-					 messageBox.setMessage("MAX OBJECT COUNT!");
-					 messageBox.open();
-					//JOptionPane.showMessageDialog(null,"MAX OBJECT COUNT!","ERROR", JOptionPane.ERROR_MESSAGE);
-					 }
 			}
 		});
 	}
