@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
@@ -316,7 +317,10 @@ public class gui {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-		System.out.println(getCanvas().getListeners(SWT.Paint));
+				Listener[] paintListener = getCanvas().getListeners(SWT.Paint);
+				System.out.println(paintListener.length-1);
+				
+		
 			}
 		});
 		

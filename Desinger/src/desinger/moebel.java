@@ -24,6 +24,7 @@ Canvas canvas;
 Image image;
 TreeItem trtm;
 String name;
+boolean hasPaintListener = false;
 
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
@@ -87,10 +88,15 @@ String name;
 		System.out.println(this.toString());
 	}
 	
+	boolean hasPaintListener() {
+		return hasPaintListener;
+	}
+	
 	void draw(boolean... highlighted) {
 		boolean hightlight = highlighted.length > 0 ? highlighted[0] : false; 
 		try {
 		canvas.removePaintListener(paintListener);
+		hasPaintListener = false;
 		}catch(Exception e) {}
 		canvas.addPaintListener(paintListener = new PaintListener() {
 			 public void paintControl(PaintEvent e) {
@@ -108,6 +114,7 @@ String name;
 						e.gc.drawRectangle(0, 0, width, height);
 				}
 				 transform.dispose();
+				 hasPaintListener = true;
 			 }
 		});
 		canvas.redraw();
@@ -116,6 +123,7 @@ String name;
 	void hide(Canvas canvas) {
 		try {
 			canvas.removePaintListener(paintListener);
+			hasPaintListener = false;
 		}catch(Exception e) {}
 		canvas.redraw();
 	}
