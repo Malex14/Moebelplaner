@@ -317,10 +317,15 @@ public class gui {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				Listener[] paintListener = getCanvas().getListeners(SWT.Paint);
-				System.out.println(paintListener.length-1);
-				
-		
+				moebel moebel = null;
+				for (TestObjekt testObjekt : testObjektArray) {
+					if(testObjekt.hasPaintListener()){
+						if(testObjekt.contains(new java.awt.Point(e.x,e.y))) {moebel = testObjekt;} else {}
+						testObjekt.draw();
+						System.out.println(testObjekt);
+					}
+				}
+				if(moebel != null) {moebel.draw(true);}
 			}
 		});
 		

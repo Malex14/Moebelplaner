@@ -1,5 +1,9 @@
 package desinger;
 
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -17,7 +21,7 @@ protected int x;
 protected int y;
 protected int width;
 protected int height;
-protected float angle;
+protected float angle = 0;
 protected Device device = Display.getCurrent();
 PaintListener paintListener;
 Canvas canvas;
@@ -118,6 +122,23 @@ boolean hasPaintListener = false;
 			 }
 		});
 		canvas.redraw();
+	}
+	
+	boolean contains(Point2D point) {
+		Rectangle rect = new Rectangle(x, y, width, height);
+		AffineTransform t = new AffineTransform();
+		t.translate(rect.x, rect.y);
+        t.rotate(Math.toRadians(angle));
+        t.translate(-(rect.width/2)-x, -(rect.height/2)-y);
+        Point2D tp;
+		try {
+			tp = t.inverseTransform(point,null);
+			if(rect.contains(tp.getX(),tp.getY())) {
+	            System.out.println("HIT INSIDE RECTANGLE");
+	            return true;
+	        }
+		} catch (NoninvertibleTransformException e) {}
+		return false;
 	}
 	
 	void hide(Canvas canvas) {
