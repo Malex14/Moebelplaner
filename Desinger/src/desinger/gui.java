@@ -322,7 +322,6 @@ public class gui {
 					if(testObjekt.hasPaintListener()){
 						if(testObjekt.contains(new java.awt.Point(e.x,e.y))) {moebel = testObjekt;} else {}
 						testObjekt.draw();
-						System.out.println(testObjekt);
 					}
 				}
 				if(moebel != null) {moebel.draw(true);}

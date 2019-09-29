@@ -130,13 +130,9 @@ boolean hasPaintListener = false;
 		t.translate(rect.x, rect.y);
         t.rotate(Math.toRadians(angle));
         t.translate(-(rect.width/2)-x, -(rect.height/2)-y);
-        Point2D tp;
 		try {
-			tp = t.inverseTransform(point,null);
-			if(rect.contains(tp.getX(),tp.getY())) {
-	            System.out.println("HIT INSIDE RECTANGLE");
-	            return true;
-	        }
+			Point2D tp = t.inverseTransform(point,null);
+			if(rect.contains(tp.getX(),tp.getY())) return true;
 		} catch (NoninvertibleTransformException e) {}
 		return false;
 	}
