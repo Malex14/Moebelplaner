@@ -114,7 +114,7 @@ public class gui {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		ArrayList<TestObjekt> testObjektArray = new ArrayList<TestObjekt>();
+		ArrayList<moebel> moebel = new ArrayList<moebel>();
 		
 		shlMbelplaner = new Shell();
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
@@ -187,8 +187,8 @@ public class gui {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					testObjektArray.get(testObjektArray.size()-1).hide(getCanvas());
-					testObjektArray.remove(testObjektArray.size()-1);
+					moebel.get(moebel.size()-1).hide(getCanvas());
+					moebel.remove(moebel.size()-1);
 					}catch(Exception e1) {}
 			}
 		});
@@ -230,8 +230,8 @@ public class gui {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-				testObjektArray.get(testObjektArray.size()-1).hide(getCanvas());
-				testObjektArray.remove(testObjektArray.size()-1);
+				moebel.get(moebel.size()-1).hide(getCanvas());
+				moebel.remove(moebel.size()-1);
 				}catch(Exception e1) {}
 			}
 		});
@@ -317,12 +317,12 @@ public class gui {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				moebel moebel = null;
-				for (TestObjekt testObjekt : testObjektArray) {
-					if(testObjekt.hasPaintListener() && testObjekt.contains(new java.awt.Point(e.x,e.y))) moebel = testObjekt;
-						testObjekt.draw();
+				moebel tmp_moebel = null;
+				for (moebel moebel : moebel) {
+					if(moebel.hasPaintListener() && moebel.contains(new java.awt.Point(e.x,e.y))) tmp_moebel = moebel;
+					moebel.draw();
 					}
-				if(moebel != null) moebel.draw(true);
+				if(tmp_moebel != null) tmp_moebel.draw(true);
 			}
 		});
 		
@@ -348,8 +348,8 @@ public class gui {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				newItem dialog = new newItem(shlMbelplaner,SWT.NONE);
-				testObjektArray.add(new TestObjekt(getCanvas()));
-				testObjektArray.get(testObjektArray.size()-1).testMethode();
+				moebel.add(new TestObjekt(getCanvas()));
+				moebel.get(moebel.size()-1).testMethode();
 			}
 		});
 	}
