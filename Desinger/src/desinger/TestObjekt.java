@@ -8,7 +8,8 @@ int size_x;
 int size_y;
 int rotation;
 
-	public TestObjekt(Canvas c) {
+	public TestObjekt(Canvas c, String... objName) {
+		name = objName[0]; 
 		canvas = c;
 		x = (int)(Math.random()* gui.getCanvas().getBounds().width);
 		y = (int)(Math.random()* gui.getCanvas().getBounds().height);

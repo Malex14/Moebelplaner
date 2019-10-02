@@ -258,17 +258,10 @@ public class gui {
 		
 		trtmMoebel = new TreeItem(tree, SWT.NONE);
 		trtmMoebel.setText("M\u00F6bel");
-		
-		
-		TreeItem trtmTestTisch = new TreeItem(trtmMoebel, SWT.NONE);
-		trtmTestTisch.setText("Test Tisch");
 		trtmMoebel.setExpanded(true);
 		
 		TreeItem trtmFenster = new TreeItem(tree, SWT.NONE);
 		trtmFenster.setText("Fenster");
-		
-		TreeItem trtmTestFenster = new TreeItem(trtmFenster, SWT.NONE);
-		trtmTestFenster.setText("Test Fenster");
 		trtmFenster.setExpanded(true);
 		
 		TabItem tbtmEigenschaften = new TabItem(tabFolder, SWT.NONE);
@@ -320,9 +313,9 @@ public class gui {
 				moebel tmp_moebel = null;
 				for (moebel moebel : moebel) {
 					if(moebel.hasPaintListener() && moebel.contains(new java.awt.Point(e.x,e.y))) tmp_moebel = moebel;
-					moebel.draw();
+					moebel.setHighlight(false);
 					}
-				if(tmp_moebel != null) tmp_moebel.draw(true);
+				if(tmp_moebel != null) tmp_moebel.setHighlight(true);
 			}
 		});
 		
@@ -347,9 +340,11 @@ public class gui {
 		btntestObjekt.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				newItem dialog = new newItem(shlMbelplaner,SWT.NONE);
-				moebel.add(new TestObjekt(getCanvas()));
+				
+				try {
+				moebel.add(new TestObjekt(getCanvas(),new newItem(new Shell(), SWT.NONE).open().toString()));
 				moebel.get(moebel.size()-1).testMethode();
+				}catch(Exception e1) {}
 			}
 		});
 	}

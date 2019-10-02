@@ -124,6 +124,11 @@ boolean hasPaintListener = false;
 		canvas.redraw();
 	}
 	
+	void setHighlight(boolean highlight) {
+		draw(highlight);
+		if(highlight) trtm.setBackground(new Color(device, /*205,232,255*/ 220,220,220)); else trtm.setBackground(new Color(device, 255,255,255));
+	}
+	
 	boolean contains(Point2D point) {
 		Rectangle rect = new Rectangle(x, y, width, height);
 		AffineTransform t = new AffineTransform();
