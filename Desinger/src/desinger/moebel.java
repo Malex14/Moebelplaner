@@ -163,4 +163,5 @@ boolean hasPaintListener = false;
 	void removeFromTree() {
 		trtm = null;
 	}
+	//test
 }
