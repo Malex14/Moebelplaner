@@ -23,12 +23,13 @@ protected int width;
 protected int height;
 protected float angle = 0;
 protected Device device = Display.getCurrent();
-PaintListener paintListener;
-Canvas canvas;
-Image image;
-TreeItem trtm;
-String name;
-boolean hasPaintListener = false;
+protected PaintListener paintListener;
+protected Canvas canvas;
+protected Image image;
+protected TreeItem trtm;
+protected String name;
+protected boolean hasPaintListener = false;
+protected boolean highlight = false;
 
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
@@ -97,7 +98,7 @@ boolean hasPaintListener = false;
 	}
 	
 	void draw(boolean... highlighted) {
-		boolean hightlight = highlighted.length > 0 ? highlighted[0] : false; 
+		highlight = highlighted.length > 0 ? highlighted[0] : false; 
 		try {
 		canvas.removePaintListener(paintListener);
 		hasPaintListener = false;
@@ -110,7 +111,7 @@ boolean hasPaintListener = false;
 				 transform.translate(-(width/2), -(height/2));
 				 e.gc.setTransform(transform);
 				 e.gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height);
-				 if (hightlight) {
+				 if (highlight) {
 						e.gc.setForeground(new Color(device,255,0,0));
 						e.gc.setLineWidth(2);
 						e.gc.drawLine(0, 0, width, height);
@@ -124,7 +125,8 @@ boolean hasPaintListener = false;
 		canvas.redraw();
 	}
 	
-	void setHighlight(boolean highlight) {
+	void setHighlight(boolean highlighted) {
+		highlight = highlighted;
 		draw(highlight);
 		if(highlight) trtm.setBackground(new Color(device, /*205,232,255*/ 220,220,220)); else trtm.setBackground(new Color(device, 255,255,255));
 	}
@@ -146,6 +148,7 @@ boolean hasPaintListener = false;
 		try {
 			canvas.removePaintListener(paintListener);
 			hasPaintListener = false;
+			highlight = false;
 		}catch(Exception e) {}
 		canvas.redraw();
 	}
@@ -162,5 +165,9 @@ boolean hasPaintListener = false;
 	
 	void removeFromTree() {
 		trtm = null;
+	}
+	
+	boolean isHighlighted() {
+		return highlight;
 	}
 }

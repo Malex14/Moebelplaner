@@ -63,6 +63,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.MouseMoveListener;
 
 @SuppressWarnings("unused")
 public class gui {
@@ -75,6 +76,8 @@ public class gui {
 	private Text text_1;
 	private Tree tree;
 	private static TreeItem trtmMoebel;
+	private boolean drag = false;
+	private moebel dragMoebel;
 
 	/**
 	 * Launch the application.
@@ -306,7 +309,29 @@ public class gui {
 		formToolkit.adapt(btnbernehmen, true, true);
 		btnbernehmen.setText("\u00DCbernehmen");
 		
-		canvas = new Canvas(shlMbelplaner, SWT.BORDER);
+		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
+		canvas.addMouseMoveListener(new MouseMoveListener() {
+			public void mouseMove(MouseEvent arg0) {
+				if(drag)System.out.print(arg0.x);
+				if(drag)System.out.print("  ");
+				if(drag)System.out.println(arg0.y);
+				try {
+				if(drag) {
+					dragMoebel.setPosition(arg0.x, arg0.y);
+				}} catch (Exception e) {}
+			}
+		});
+		canvas.addDragDetectListener(new DragDetectListener() {
+			public void dragDetected(DragDetectEvent arg0) {
+				
+				try {
+				for (moebel moebel : moebel) {
+					if(moebel.isHighlighted()) dragMoebel = moebel;
+				}
+				if (dragMoebel.contains(new java.awt.Point(arg0.x,arg0.y))) drag = true;
+				} catch(Exception e) {}
+			}
+		});
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
@@ -316,6 +341,11 @@ public class gui {
 					moebel.setHighlight(false);
 					}
 				if(tmp_moebel != null) tmp_moebel.setHighlight(true);
+			}
+			
+			@Override
+			public void mouseUp(MouseEvent e) {
+				drag = false;
 			}
 		});
 		
