@@ -49,6 +49,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.swt.custom.CCombo;
@@ -78,6 +80,7 @@ public class Gui {
 	private static TreeItem trtmMoebel;
 	private boolean drag = false;
 	private Moebel dragMoebel;
+	private String newItemDialog[] = {"Name","Bitte geben Sie einen Namen ein"};
 
 	/**
 	 * Launch the application.
@@ -248,10 +251,19 @@ public class Gui {
 		btnCreateTisch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					moebel.add(new ItemTisch(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemTisch(getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
-					}catch(Exception e1) {}
+				}
 			}
 		});
 		
@@ -263,10 +275,19 @@ public class Gui {
 		btnCreateRunderTisch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-				moebel.add(new ItemrunderTisch(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
-				moebel.get(moebel.size()-1).testMethode();
-				}catch(Exception e1) {}
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemrunderTisch(getCanvas(),dialog.getValue()));
+					moebel.get(moebel.size()-1).testMethode();
+				}
 			}
 		});
 		formToolkit.adapt(btnCreateRunderTisch, true, true);
@@ -276,10 +297,19 @@ public class Gui {
 		btnCreateWaschmaschine.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					moebel.add(new ItemWaschmaschine(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemWaschmaschine(getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
-					}catch(Exception e1) {}
+				}
 			}
 		});
 		formToolkit.adapt(btnCreateWaschmaschine, true, true);
@@ -401,11 +431,19 @@ public class Gui {
 		btntestObjekt.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				try {
-					moebel.add(new TestObjekt(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new TestObjekt(getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
-					}catch(Exception e1) {}
+				}
 			}
 		});
 	}

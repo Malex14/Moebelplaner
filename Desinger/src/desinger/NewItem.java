@@ -57,7 +57,6 @@ public class NewItem extends Dialog {
 		
 		Button btnOk = new Button(shlObjektnamenDefinieren, SWT.NONE);
 		
-		btnOk.setSelection(true);
 		btnOk.setBounds(264, 72, 75, 33);
 		btnOk.setText("OK");
 		
@@ -78,6 +77,7 @@ public class NewItem extends Dialog {
 		text = new Text(grpBitteGebenSie, SWT.BORDER);
 		text.setToolTipText("Objektname");
 		text.setBounds(10, 25, 309, 21);
+		text.setFocus();
 		text.addKeyListener(new KeyListener() {
 			
 			@Override
