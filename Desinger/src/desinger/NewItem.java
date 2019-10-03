@@ -14,7 +14,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 @SuppressWarnings("unused")
 
-public class newItem extends Dialog {
+public class NewItem extends Dialog {
 
 	protected String result;
 	protected Shell shlObjektnamenDefinieren;
@@ -25,7 +25,7 @@ public class newItem extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public newItem(Shell parent, int style) {
+	public NewItem(Shell parent, int style) {
 		super(parent, style);
 		setText("SWT Dialog");
 	}

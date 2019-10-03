@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 
-public class moebel {
+public class Moebel {
 
 protected int x;
 protected int y;

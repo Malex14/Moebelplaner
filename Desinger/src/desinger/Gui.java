@@ -66,7 +66,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.MouseMoveListener;
 
 @SuppressWarnings("unused")
-public class gui {
+public class Gui {
 
 	protected Shell shlMbelplaner;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
@@ -77,7 +77,7 @@ public class gui {
 	private Tree tree;
 	private static TreeItem trtmMoebel;
 	private boolean drag = false;
-	private moebel dragMoebel;
+	private Moebel dragMoebel;
 
 	/**
 	 * Launch the application.
@@ -85,7 +85,7 @@ public class gui {
 	 */
 	public static void main(String[] args) {
 		try {
-			gui window = new gui();
+			Gui window = new Gui();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,7 +104,6 @@ public class gui {
 		shlMbelplaner.layout();
 		
 		while (!shlMbelplaner.isDisposed()) {
-			desinger.main.guiloop();
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -117,7 +116,7 @@ public class gui {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		ArrayList<moebel> moebel = new ArrayList<moebel>();
+		ArrayList<Moebel> moebel = new ArrayList<Moebel>();
 		
 		shlMbelplaner = new Shell();
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
@@ -245,11 +244,46 @@ public class gui {
 		Button btnCreateSchrank = formToolkit.createButton(grpMbel, "Schrank", SWT.NONE);
 		
 		
-		Button btnCreateStuhl = formToolkit.createButton(grpMbel, "New Button", SWT.NONE);
+		Button btnCreateTisch = formToolkit.createButton(grpMbel, "Tisch", SWT.NONE);
+		btnCreateTisch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					moebel.add(new ItemTisch(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+					moebel.get(moebel.size()-1).testMethode();
+					}catch(Exception e1) {}
+			}
+		});
 		
 		
 		FormData fd_scale = new FormData();
 		fd_scale.top = new FormAttachment(grpMbel, 118);
+		
+		Button btnCreateRunderTisch = new Button(grpMbel, SWT.NONE);
+		btnCreateRunderTisch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+				moebel.add(new ItemrunderTisch(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+				moebel.get(moebel.size()-1).testMethode();
+				}catch(Exception e1) {}
+			}
+		});
+		formToolkit.adapt(btnCreateRunderTisch, true, true);
+		btnCreateRunderTisch.setText("runder Tisch");
+		
+		Button btnCreateWaschmaschine = new Button(grpMbel, SWT.NONE);
+		btnCreateWaschmaschine.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					moebel.add(new ItemWaschmaschine(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+					moebel.get(moebel.size()-1).testMethode();
+					}catch(Exception e1) {}
+			}
+		});
+		formToolkit.adapt(btnCreateWaschmaschine, true, true);
+		btnCreateWaschmaschine.setText("Waschmaschine");
 		fd_scale.left = new FormAttachment(0, 32);
 		
 		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
@@ -312,20 +346,16 @@ public class gui {
 		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent arg0) {
-				if(drag)System.out.print(arg0.x);
-				if(drag)System.out.print("  ");
-				if(drag)System.out.println(arg0.y);
 				try {
-				if(drag) {
-					dragMoebel.setPosition(arg0.x, arg0.y);
-				}} catch (Exception e) {}
+					if(drag) dragMoebel.setPosition(arg0.x, arg0.y);
+				} catch (Exception e) {}
 			}
 		});
 		canvas.addDragDetectListener(new DragDetectListener() {
 			public void dragDetected(DragDetectEvent arg0) {
 				
 				try {
-				for (moebel moebel : moebel) {
+				for (Moebel moebel : moebel) {
 					if(moebel.isHighlighted()) dragMoebel = moebel;
 				}
 				if (dragMoebel.contains(new java.awt.Point(arg0.x,arg0.y))) drag = true;
@@ -335,17 +365,18 @@ public class gui {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				moebel tmp_moebel = null;
-				for (moebel moebel : moebel) {
+				Moebel tmp_moebel = null;
+				for (Moebel moebel : moebel) {
 					if(moebel.hasPaintListener() && moebel.contains(new java.awt.Point(e.x,e.y))) tmp_moebel = moebel;
 					moebel.setHighlight(false);
-					}
+				}
 				if(tmp_moebel != null) tmp_moebel.setHighlight(true);
 			}
 			
 			@Override
 			public void mouseUp(MouseEvent e) {
 				drag = false;
+				dragMoebel = null;
 			}
 		});
 		
@@ -372,9 +403,9 @@ public class gui {
 			public void widgetSelected(SelectionEvent e) {
 				
 				try {
-				moebel.add(new TestObjekt(getCanvas(),new newItem(new Shell(), SWT.NONE).open().toString()));
-				moebel.get(moebel.size()-1).testMethode();
-				}catch(Exception e1) {}
+					moebel.add(new TestObjekt(getCanvas(),new NewItem(new Shell(), SWT.NONE).open().toString()));
+					moebel.get(moebel.size()-1).testMethode();
+					}catch(Exception e1) {}
 			}
 		});
 	}
