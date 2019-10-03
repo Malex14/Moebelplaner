@@ -42,6 +42,7 @@ import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.custom.TableCursor;
@@ -79,6 +80,7 @@ public class Gui {
 	private Tree tree;
 	private static TreeItem trtmMoebel;
 	private boolean drag = false;
+	private boolean mouseDown = false;
 	private Moebel dragMoebel;
 	private String newItemDialog[] = {"Name","Bitte geben Sie einen Namen ein"};
 
@@ -129,6 +131,7 @@ public class Gui {
 		
 		Menu menu = new Menu(shlMbelplaner, SWT.BAR);
 		shlMbelplaner.setMenuBar(menu);
+		shlMbelplaner.setImages(new Image[] {new Image(Display.getCurrent(),"./assets/icon32.png"),new Image(Display.getCurrent(),"./assets/icon512.png")});
 		
 		MenuItem mntmDatei = new MenuItem(menu, SWT.CASCADE);
 		mntmDatei.setText("Datei");
@@ -378,6 +381,50 @@ public class Gui {
 			public void mouseMove(MouseEvent arg0) {
 				try {
 					if(drag) dragMoebel.setPosition(arg0.x, arg0.y);
+					if(mouseDown) {
+						Moebel tmp_moebel = null;
+						for (Moebel moebel : moebel) {
+							if(moebel.isHighlighted()) tmp_moebel = moebel;
+						}
+						/*
+						double angle = 0;
+						double r = Math.hypot(Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x), Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y));
+						double s = Math.hypot(Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x), r+Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y));
+						angle = 2*Math.asin(s/(2*r));
+						*/
+						int ank = 0;
+						int geg = 0;
+						float angle = 0;
+						if (arg0.x < tmp_moebel.getX()) {
+							if(arg0.y <= tmp_moebel.getY()) {
+								//links oben
+								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+								angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+270;
+							}
+							else if(arg0.y > tmp_moebel.getY()) {
+								//links unten
+								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+								angle = (float) (Math.toDegrees((float)Math.atan((float)-geg/(float)ank))+270);
+							}
+						}
+						else if (arg0.x >= tmp_moebel.getX()) {
+							if(arg0.y <= tmp_moebel.getY()) {
+								//rechts oben
+								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+								angle = (float) Math.abs(Math.toDegrees((float)Math.atan((float)geg/(float)ank))-90);
+							}
+							else if(arg0.y > tmp_moebel.getY()) {
+								//rechts unten
+								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+								angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+90;
+							}
+						}
+						tmp_moebel.setAngle(angle);
+					}
 				} catch (Exception e) {}
 			}
 		});
@@ -389,6 +436,7 @@ public class Gui {
 					if(moebel.isHighlighted()) dragMoebel = moebel;
 				}
 				if (dragMoebel.contains(new java.awt.Point(arg0.x,arg0.y))) drag = true;
+				else mouseDown = true;
 				} catch(Exception e) {}
 			}
 		});
@@ -406,7 +454,11 @@ public class Gui {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				drag = false;
+				mouseDown = false;
 				dragMoebel = null;
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
 			}
 		});
 		

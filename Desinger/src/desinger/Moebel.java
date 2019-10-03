@@ -37,7 +37,7 @@ protected boolean highlight = false;
 		canvas.redraw();
 	}
 	
-	void setAngle(int new_angle) {
+	void setAngle(float new_angle) {
 		angle = new_angle;
 		canvas.redraw();
 	}
@@ -166,6 +166,7 @@ protected boolean highlight = false;
 	void removeFromTree() {
 		trtm = null;
 	}
+	
 	
 	boolean isHighlighted() {
 		return highlight;
