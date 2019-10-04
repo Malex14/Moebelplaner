@@ -83,6 +83,8 @@ public class Gui {
 	private boolean mouseDown = false;
 	private Moebel dragMoebel;
 	private String newItemDialog[] = {"Name","Bitte geben Sie einen Namen ein"};
+	private Float start_angle;
+	private Float start_mouse;
 
 	/**
 	 * Launch the application.
@@ -124,6 +126,7 @@ public class Gui {
 		ArrayList<Moebel> moebel = new ArrayList<Moebel>();
 		
 		shlMbelplaner = new Shell();
+		//.setImage(SWTResourceManager.getImage(Gui.class, "/icons/icon32.png"));
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
 		shlMbelplaner.setText("M\u00F6belplaner");
 		shlMbelplaner.setSize(899, 578);
@@ -131,7 +134,7 @@ public class Gui {
 		
 		Menu menu = new Menu(shlMbelplaner, SWT.BAR);
 		shlMbelplaner.setMenuBar(menu);
-		shlMbelplaner.setImages(new Image[] {new Image(Display.getCurrent(),"./assets/icon32.png"),new Image(Display.getCurrent(),"./assets/icon512.png")});
+		shlMbelplaner.setImages(new Image[] {SWTResourceManager.getImage(Gui.class, "/icons/icon32.png"),SWTResourceManager.getImage(Gui.class, "/icons/icon512.png")});
 		
 		MenuItem mntmDatei = new MenuItem(menu, SWT.CASCADE);
 		mntmDatei.setText("Datei");
@@ -342,7 +345,7 @@ public class Gui {
 		formToolkit.paintBordersFor(composite_1);
 		
 		Group grpObjektobjektname = new Group(composite_1, SWT.NONE);
-		grpObjektobjektname.setText("Objekt: [OBJEKTNAME]");
+		grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
 		grpObjektobjektname.setBounds(0, 0, 242, 491);
 		formToolkit.adapt(grpObjektobjektname);
 		formToolkit.paintBordersFor(grpObjektobjektname);
@@ -372,9 +375,23 @@ public class Gui {
 		formToolkit.adapt(lblY, true, true);
 		
 		Button btnbernehmen = new Button(grpObjektobjektname, SWT.NONE);
-		btnbernehmen.setBounds(157, 456, 75, 25);
+		btnbernehmen.setEnabled(false);
+		btnbernehmen.setBounds(133, 456, 99, 25);
 		formToolkit.adapt(btnbernehmen, true, true);
 		btnbernehmen.setText("\u00DCbernehmen");
+		
+		Button btnAutomatischbernehmen = new Button(grpObjektobjektname, SWT.CHECK);
+		btnAutomatischbernehmen.setSelection(true);
+		btnAutomatischbernehmen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnAutomatischbernehmen.getSelection()) btnbernehmen.setEnabled(false);
+				else btnbernehmen.setEnabled(true);
+			}
+		});
+		btnAutomatischbernehmen.setBounds(10, 456, 117, 25);
+		formToolkit.adapt(btnAutomatischbernehmen, true, true);
+		btnAutomatischbernehmen.setText("auto \u00DCbernehmen");
 		
 		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.addMouseMoveListener(new MouseMoveListener() {
@@ -386,12 +403,6 @@ public class Gui {
 						for (Moebel moebel : moebel) {
 							if(moebel.isHighlighted()) tmp_moebel = moebel;
 						}
-						/*
-						double angle = 0;
-						double r = Math.hypot(Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x), Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y));
-						double s = Math.hypot(Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x), r+Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y));
-						angle = 2*Math.asin(s/(2*r));
-						*/
 						int ank = 0;
 						int geg = 0;
 						float angle = 0;
@@ -423,7 +434,9 @@ public class Gui {
 								angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+90;
 							}
 						}
-						tmp_moebel.setAngle(angle);
+						if(start_angle == null) start_angle = tmp_moebel.getAngle();
+						if(start_mouse == null) start_mouse = angle;
+						tmp_moebel.setAngle((start_angle +(angle - start_mouse)) % 360);
 					}
 				} catch (Exception e) {}
 			}
@@ -448,7 +461,10 @@ public class Gui {
 					if(moebel.hasPaintListener() && moebel.contains(new java.awt.Point(e.x,e.y))) tmp_moebel = moebel;
 					moebel.setHighlight(false);
 				}
-				if(tmp_moebel != null) tmp_moebel.setHighlight(true);
+				if(tmp_moebel != null) {
+					tmp_moebel.setHighlight(true);
+					grpObjektobjektname.setText("Objekt: " + tmp_moebel.getName());
+				} else grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
 			}
 			
 			@Override
@@ -456,6 +472,8 @@ public class Gui {
 				drag = false;
 				mouseDown = false;
 				dragMoebel = null;
+				start_angle = null;
+				start_mouse = null;
 			}
 			@Override
 			public void mouseDown(MouseEvent e) {
