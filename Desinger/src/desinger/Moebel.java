@@ -89,6 +89,10 @@ protected boolean highlight = false;
 		return width;
 	}
 	
+	String getName() {
+		return name;
+	}
+	
 	void testMethode() {
 		System.out.println(this.toString());
 	}
@@ -153,8 +157,8 @@ protected boolean highlight = false;
 		canvas.redraw();
 	}
 	
-	void addToTree(TreeItem treeItem) {
-		trtm = new TreeItem(treeItem,SWT.NONE);
+	void addToTree(TreeItem treeItem, int style) {
+		trtm = new TreeItem(treeItem,style);
 		if (name != null) { 
 		trtm.setText(name);
 		} else {

@@ -1,5 +1,6 @@
 package desinger;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -15,6 +16,6 @@ public class TestObjekt extends Moebel{
 		angle = (float)(Math.random()* 360);
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/testObjekt.png");
 		draw();
-		addToTree(Gui.gettrtmMoebel());
+		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
 	}	
 }

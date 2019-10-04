@@ -1,5 +1,6 @@
 package desinger;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -25,7 +26,7 @@ public class ItemWaschmaschine extends Moebel{
 		gc.dispose();
 		
 		draw();
-		addToTree(Gui.gettrtmMoebel());
+		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
 	}
 
 }
