@@ -664,9 +664,6 @@ public class Gui {
 		formToolkit.paintBordersFor(canvas);
 		
 		
-		
-		//END OF AUTOGENERATION
-		
 		btntestObjekt.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
