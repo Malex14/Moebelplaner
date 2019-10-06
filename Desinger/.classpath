@@ -16,6 +16,6 @@
 	<classpathentry kind="lib" path="C:/Users/malte/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar" sourcepath="C:/Users/Malte/.p2/pool/plugins/com.ibm.icu_64.2.0.v20190507-1337.jar"/>
 	<classpathentry kind="lib" path="C:/Users/malte/.p2/pool/plugins/org.eclipse.ui.forms_3.8.0.v20190519-1034.jar" sourcepath="C:/Users/Malte/.p2/pool/plugins/org.eclipse.ui.forms_3.8.0.v20190519-1034.jar"/>
 	<classpathentry kind="lib" path="swing2swt.jar"/>
-	<classpathentry kind="lib" path="C:/Users/malte/Downloads/json-20190722.jar"/>
+	<classpathentry kind="lib" path="json-20190722.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
