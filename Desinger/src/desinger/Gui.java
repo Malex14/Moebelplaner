@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Menu;
@@ -55,8 +58,7 @@ public class Gui {
 
 	protected Shell shlMbelplaner;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-	int testObjektIndex = 0;
-	static Canvas canvas;
+	private static Canvas canvas;
 	private Text text;
 	private Text text_1;
 	private Tree tree;
@@ -67,8 +69,12 @@ public class Gui {
 	private String newItemDialog[] = {"Name","Bitte geben Sie einen Namen ein"};
 	private Float start_angle;
 	private Float start_mouse;
-	ArrayList<Moebel> moebel = new ArrayList<>();
-	String savepath;
+	private ArrayList<Moebel> moebel = new ArrayList<>();
+	private String savepath;
+	private boolean hasStar = false;
+	private static boolean hasChanged = false;
+	
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -95,6 +101,10 @@ public class Gui {
 		shlMbelplaner.layout();
 		
 		while (!shlMbelplaner.isDisposed()) {
+			if(hasChanged && !hasStar ) {
+				shlMbelplaner.setText(shlMbelplaner.getText()+"*");
+				hasStar = true;
+			}
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -102,6 +112,8 @@ public class Gui {
 		}
 		
 	}
+	
+	
 
 	/**
 	 * Create contents of the window.
@@ -142,6 +154,7 @@ public class Gui {
         		}
         		moebel = new ArrayList<Moebel>();
 				}
+            	hasStar = hasChanged = false;
 				shlMbelplaner.setText("M\u00F6belplaner - Unbennant");
 			}
 		});
@@ -159,7 +172,6 @@ public class Gui {
 					MessageBox msg = new MessageBox(shlMbelplaner, SWT.YES | SWT.NO | SWT.ICON_WARNING);
 					msg.setText("Neu");
 					msg.setMessage("Die aktuelle Datei ist nicht leer. Soll sie verworfen werden?");
-					if(moebel.isEmpty() || msg.open() == SWT.YES) {
 					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.OPEN);
 					fileDialog.setFilterExtensions(new String[] {"*.mob"});
 					fileDialog.setText("Öffnen");
@@ -169,6 +181,7 @@ public class Gui {
 					String jsonIn = ois.readUTF();
 					ois.close();
             		fis.close();
+            		if(moebel.isEmpty() || msg.open() == SWT.YES) {
             		JSONArray ja = new JSONArray(jsonIn);
             		for (Moebel moebel : moebel) {
             			moebel.hide(Gui.getCanvas());
@@ -196,6 +209,7 @@ public class Gui {
             			Moebel tmp = moebel.get(moebel.size()-1);
             			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
             		}
+            		hasStar = hasChanged = false;
             		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 					}
 				} catch(Exception e1) {};
@@ -227,6 +241,7 @@ public class Gui {
 					oos.writeUTF(ja.toString());
 					oos.close();
 	            	fos.close();
+	            	hasStar = hasChanged = false;
 	            	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 				}catch(Exception e1) {}
 			}
@@ -255,6 +270,7 @@ public class Gui {
 					oos.writeUTF(ja.toString());
 					oos.close();
 	            	fos.close();
+	            	hasStar = hasChanged = false;
 	            	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 				}catch(Exception e1) {}
 				
@@ -693,5 +709,11 @@ public class Gui {
 	}
 	public static TreeItem gettrtmMoebel() {
 		return trtmMoebel;
+	}
+	public Shell getShell() {
+		return shlMbelplaner;
+	}
+	public static void sethasChanged(boolean changed) {
+		hasChanged = changed;
 	}
 }

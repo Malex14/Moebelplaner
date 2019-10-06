@@ -41,38 +41,45 @@ protected boolean highlight = false;
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
 		y = new_y;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
 	void setAngle(float new_angle) {
 		angle = new_angle;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
 	void setDimensions(int new_width, int new_height) {
 		height = new_height;
 		width = new_width;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
 	
 	void setX(int new_x) {
 		x = new_x;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
 	void setY(int new_y) {
 		y = new_y;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
 	void setWidth(int new_width) {
 		width = new_width;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 
 	void setHeight(int new_height) {
 		height = new_height;
+		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
@@ -168,6 +175,8 @@ protected boolean highlight = false;
 	}
 	
 	void setHighlight(boolean highlighted) {
+
+		Gui.sethasChanged(true);
 		highlight = highlighted;
 		draw(highlight);
 		if(highlight) trtm.setBackground(new Color(device, /*205,232,255*/ 220,220,220)); else trtm.setBackground(new Color(device, 255,255,255));
