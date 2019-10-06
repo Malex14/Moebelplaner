@@ -1,71 +1,51 @@
 package desinger;
 
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.omg.CORBA.portable.ValueOutputStream;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
 
-import java.io.ObjectInputStream.GetField;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
-import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Group;
 import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ColumnPixelData;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.DragDetectEvent;
-import org.eclipse.swt.events.GestureListener;
-import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.MouseMoveListener;
 
 @SuppressWarnings("unused")
@@ -85,7 +65,7 @@ public class Gui {
 	private String newItemDialog[] = {"Name","Bitte geben Sie einen Namen ein"};
 	private Float start_angle;
 	private Float start_mouse;
-
+	ArrayList<Moebel> moebel = new ArrayList<>();
 	/**
 	 * Launch the application.
 	 * @param args
@@ -105,6 +85,7 @@ public class Gui {
 	 * Open the window.
 	 */
 	public void open() {
+		
 		Display display = Display.getDefault();
 		createContents();
 		shlMbelplaner.open();
@@ -123,7 +104,7 @@ public class Gui {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		ArrayList<Moebel> moebel = new ArrayList<Moebel>();
+		
 		
 		shlMbelplaner = new Shell();
 		//.setImage(SWTResourceManager.getImage(Gui.class, "/icons/icon32.png"));
@@ -145,16 +126,126 @@ public class Gui {
 		MenuItem mntmNeu = new MenuItem(menu_1, SWT.NONE);
 		mntmNeu.setText("Neu");
 		
+		
+		
+		//ÖFFNEN
+		
 		MenuItem mntmOeffnen = new MenuItem(menu_1, SWT.NONE);
+		mntmOeffnen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.OPEN);
+					fileDialog.setFilterExtensions(new String[] {"*.mob"});
+					fileDialog.setText("Öffnen");
+					FileInputStream fis = new FileInputStream(fileDialog.open());
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					String jsonIn = ois.readUTF();
+					ois.close();
+            		fis.close();
+            		JSONArray ja = new JSONArray(jsonIn);
+            		for (Moebel moebel : moebel) {
+            			moebel.hide(Gui.getCanvas());
+            			moebel.removeFromTree();
+            		}
+            		moebel = new ArrayList<Moebel>();
+            		for (int i = 0; i < ja.length(); i++) {
+            			JSONObject jo = new JSONObject(ja.get(i).toString());
+            			switch (jo.getString("type")) {
+            			case "desinger.TestObjekt":
+            				moebel.add(new TestObjekt(Gui.getCanvas(), jo.getString("name")));
+            				break;
+            			case "desinger.ItemTisch":
+            				moebel.add(new ItemTisch(Gui.getCanvas(), jo.getString("name")));
+            				break;
+            			case "desinger.ItemrunderTisch":
+            				moebel.add(new ItemrunderTisch(Gui.getCanvas(), jo.getString("name")));
+            				break;
+            			case "desinger.ItemWaschmaschine":
+            				moebel.add(new ItemWaschmaschine(Gui.getCanvas(), jo.getString("name")));
+            				break;
+            			default:
+            				throw new IOException();
+            			}
+            			
+            			Moebel tmp = moebel.get(moebel.size()-1);
+            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
+            		}
+				} catch(IOException ioe) {ioe.printStackTrace();};
+			}
+		});
 		mntmOeffnen.setText("\u00D6ffnen...");
 		
+		
+		//SPEICHERN
+		
 		MenuItem mntmSpeichern = new MenuItem(menu_1, SWT.NONE);
+		mntmSpeichern.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					JSONArray ja = new JSONArray(); 
+					for (Moebel moebel2 : moebel) {
+						ja.put(moebel2.getJSON());
+					}
+					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
+					fileDialog.setFilterExtensions(new String[] {"*.mob"});
+					fileDialog.setText("Speichern");
+					fileDialog.setOverwrite(true);
+					FileOutputStream fos = new FileOutputStream(fileDialog.open());
+					ObjectOutputStream oos = new ObjectOutputStream(fos);
+					oos.writeUTF(ja.toString());
+					oos.close();
+	            	fos.close();
+				}catch(Exception e1) {}
+			}
+		});
 		mntmSpeichern.setText("Speichern");
+		
+		
+		//EXPORTIEREN
 		
 		MenuItem mntmSpeichernUnter = new MenuItem(menu_1, SWT.NONE);
 		mntmSpeichernUnter.setText("Speichern unter...");
 		
 		MenuItem mntmExportieren = new MenuItem(menu_1, SWT.NONE);
+		mntmExportieren.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
+					fileDialog.setFilterExtensions(new String[] {"*.jpeg","*.png","*.bmp"});
+					fileDialog.setText("Exportieren");
+					fileDialog.setOverwrite(true);
+					Image image = new Image(Display.getCurrent(), canvas.getBounds());
+					String path = fileDialog.open();
+					int fileType = -1;
+					switch (fileDialog.getFilterIndex()) {
+					case 0:
+						fileType = SWT.IMAGE_JPEG;
+						break;
+					case 1:
+						fileType = SWT.IMAGE_PNG;
+						break;
+					case 2:
+						fileType = SWT.IMAGE_BMP;
+						break;
+					default:
+						break;
+					}
+					GC gc = new GC(image);
+					canvas.print(gc);
+					ImageLoader loader = new ImageLoader();
+					loader.data = new ImageData[] {image.getImageData()};
+					if(fileType == -1) throw new Exception();
+					loader.save(path, fileType);
+					gc.dispose();
+					image.dispose();
+				} catch (Exception e2) {
+					
+				}
+			}
+		});
 		mntmExportieren.setText("Exportieren");
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
@@ -513,6 +604,7 @@ public class Gui {
 				if(dialog.getReturnCode() == 0) {
 					moebel.add(new TestObjekt(getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
+					
 				}
 			}
 		});

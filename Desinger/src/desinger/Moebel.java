@@ -4,7 +4,8 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import org.eclipse.swt.SWT;
+
+
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -14,8 +15,12 @@ import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
+import org.json.JSONObject;
 
-public class Moebel {
+
+public class Moebel{
+
+
 
 protected int x;
 protected int y;
@@ -31,6 +36,8 @@ protected String name;
 protected boolean hasPaintListener = false;
 protected boolean highlight = false;
 
+	
+	
 	void setPosition(int new_x, int new_y) {
 		x = new_x;
 		y = new_y;
@@ -97,6 +104,37 @@ protected boolean highlight = false;
 		System.out.println(this.toString());
 	}
 	
+	JSONObject getJSON() {
+		JSONObject jo = new JSONObject();
+		jo.put("name", name);
+		jo.put("x", x);
+		jo.put("y", y);
+		jo.put("width", width);
+		jo.put("height", height);
+		jo.put("angle", angle);
+		jo.put("hasPaintListener", hasPaintListener);
+		jo.put("highlight", highlight);
+		jo.put("type", getType());
+		return jo;
+	}
+	
+	String getType() {
+		String cl = this.getClass().toString();
+		String type[] = cl.split(" ");
+		return type[1];
+	}
+	
+	void setAll(int new_x,int new_y,int new_width,int new_height,int new_angle,boolean new_hasPaintListener,boolean new_highlight) {
+		x = new_x;
+		y = new_y;
+		width = new_width;
+		height = new_height;
+		angle = new_angle;
+		hasPaintListener = new_hasPaintListener;
+		highlight = new_highlight;
+		canvas.redraw();
+	}
+	
 	boolean hasPaintListener() {
 		return hasPaintListener;
 	}
@@ -136,6 +174,7 @@ protected boolean highlight = false;
 	}
 	
 	boolean contains(Point2D point) {
+		if(hasPaintListener) {
 		Rectangle rect = new Rectangle(x, y, width, height);
 		AffineTransform t = new AffineTransform();
 		t.translate(rect.x, rect.y);
@@ -145,12 +184,14 @@ protected boolean highlight = false;
 			Point2D tp = t.inverseTransform(point,null);
 			if(rect.contains(tp.getX(),tp.getY())) return true;
 		} catch (NoninvertibleTransformException e) {}
+		}
 		return false;
 	}
 	
 	void hide(Canvas canvas) {
 		try {
 			canvas.removePaintListener(paintListener);
+			removeFromTree();
 			hasPaintListener = false;
 			highlight = false;
 		}catch(Exception e) {}
@@ -164,10 +205,10 @@ protected boolean highlight = false;
 		} else {
 			trtm.setText(this.toString());
 		}
-		
 	}
 	
 	void removeFromTree() {
+		trtm.dispose();
 		trtm = null;
 	}
 	
@@ -175,4 +216,6 @@ protected boolean highlight = false;
 	boolean isHighlighted() {
 		return highlight;
 	}
+	
+	
 }
