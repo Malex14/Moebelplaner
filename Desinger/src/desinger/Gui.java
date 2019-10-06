@@ -47,6 +47,8 @@ import org.json.JSONObject;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 @SuppressWarnings("unused")
 public class Gui {
@@ -66,6 +68,7 @@ public class Gui {
 	private Float start_angle;
 	private Float start_mouse;
 	ArrayList<Moebel> moebel = new ArrayList<>();
+	String savepath;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -109,8 +112,8 @@ public class Gui {
 		shlMbelplaner = new Shell();
 		//.setImage(SWTResourceManager.getImage(Gui.class, "/icons/icon32.png"));
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
-		shlMbelplaner.setText("M\u00F6belplaner");
-		shlMbelplaner.setSize(899, 578);
+		shlMbelplaner.setText("M\u00F6belplaner - Unbennant");
+		shlMbelplaner.setSize(899, 576);
 		shlMbelplaner.setLayout(new FormLayout());
 		
 		Menu menu = new Menu(shlMbelplaner, SWT.BAR);
@@ -123,7 +126,25 @@ public class Gui {
 		Menu menu_1 = new Menu(mntmDatei);
 		mntmDatei.setMenu(menu_1);
 		
+		
+		//NEU
+		
 		MenuItem mntmNeu = new MenuItem(menu_1, SWT.NONE);
+		mntmNeu.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MessageBox msg = new MessageBox(shlMbelplaner, SWT.YES | SWT.NO | SWT.ICON_WARNING);
+				msg.setText("Neu");
+				msg.setMessage("Die aktuelle Datei ist nicht leer. Soll sie verworfen werden?");
+				if(moebel.isEmpty() || msg.open() == SWT.YES) {
+				for (Moebel moebel : moebel) {
+        			moebel.hide(Gui.getCanvas());
+        		}
+        		moebel = new ArrayList<Moebel>();
+				}
+				shlMbelplaner.setText("M\u00F6belplaner - Unbennant");
+			}
+		});
 		mntmNeu.setText("Neu");
 		
 		
@@ -135,10 +156,15 @@ public class Gui {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					MessageBox msg = new MessageBox(shlMbelplaner, SWT.YES | SWT.NO | SWT.ICON_WARNING);
+					msg.setText("Neu");
+					msg.setMessage("Die aktuelle Datei ist nicht leer. Soll sie verworfen werden?");
+					if(moebel.isEmpty() || msg.open() == SWT.YES) {
 					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.OPEN);
 					fileDialog.setFilterExtensions(new String[] {"*.mob"});
 					fileDialog.setText("Öffnen");
-					FileInputStream fis = new FileInputStream(fileDialog.open());
+					savepath = fileDialog.open();
+					FileInputStream fis = new FileInputStream(savepath);
 					ObjectInputStream ois = new ObjectInputStream(fis);
 					String jsonIn = ois.readUTF();
 					ois.close();
@@ -146,7 +172,6 @@ public class Gui {
             		JSONArray ja = new JSONArray(jsonIn);
             		for (Moebel moebel : moebel) {
             			moebel.hide(Gui.getCanvas());
-            			moebel.removeFromTree();
             		}
             		moebel = new ArrayList<Moebel>();
             		for (int i = 0; i < ja.length(); i++) {
@@ -171,7 +196,9 @@ public class Gui {
             			Moebel tmp = moebel.get(moebel.size()-1);
             			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
             		}
-				} catch(IOException ioe) {ioe.printStackTrace();};
+            		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
+					}
+				} catch(Exception e1) {};
 			}
 		});
 		mntmOeffnen.setText("\u00D6ffnen...");
@@ -188,25 +215,55 @@ public class Gui {
 					for (Moebel moebel2 : moebel) {
 						ja.put(moebel2.getJSON());
 					}
+					if(savepath == null) {
 					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
 					fileDialog.setFilterExtensions(new String[] {"*.mob"});
 					fileDialog.setText("Speichern");
 					fileDialog.setOverwrite(true);
-					FileOutputStream fos = new FileOutputStream(fileDialog.open());
+					savepath = fileDialog.open();	
+					}
+					FileOutputStream fos = new FileOutputStream(savepath);
 					ObjectOutputStream oos = new ObjectOutputStream(fos);
 					oos.writeUTF(ja.toString());
 					oos.close();
 	            	fos.close();
+	            	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 				}catch(Exception e1) {}
 			}
 		});
 		mntmSpeichern.setText("Speichern");
 		
 		
-		//EXPORTIEREN
+		//SPEICHERTN UNTER
 		
 		MenuItem mntmSpeichernUnter = new MenuItem(menu_1, SWT.NONE);
+		mntmSpeichernUnter.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					JSONArray ja = new JSONArray(); 
+					for (Moebel moebel2 : moebel) {
+						ja.put(moebel2.getJSON());
+					}
+					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
+					fileDialog.setFilterExtensions(new String[] {"*.mob"});
+					fileDialog.setText("Speichern unter");
+					fileDialog.setOverwrite(true);
+					savepath = fileDialog.open();
+					FileOutputStream fos = new FileOutputStream(savepath);
+					ObjectOutputStream oos = new ObjectOutputStream(fos);
+					oos.writeUTF(ja.toString());
+					oos.close();
+	            	fos.close();
+	            	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
+				}catch(Exception e1) {}
+				
+			}
+		});
 		mntmSpeichernUnter.setText("Speichern unter...");
+		
+		
+		//EXPORTIEREN
 		
 		MenuItem mntmExportieren = new MenuItem(menu_1, SWT.NONE);
 		mntmExportieren.addSelectionListener(new SelectionAdapter() {
@@ -246,7 +303,7 @@ public class Gui {
 				}
 			}
 		});
-		mntmExportieren.setText("Exportieren");
+		mntmExportieren.setText("Exportieren...");
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
@@ -315,8 +372,8 @@ public class Gui {
 		
 		Group grpMbel = new Group(composite, SWT.NONE);
 		FormData fd_grpMbel = new FormData();
-		fd_grpMbel.right = new FormAttachment(0, 242);
-		fd_grpMbel.bottom = new FormAttachment(0, 148);
+		fd_grpMbel.right = new FormAttachment(100);
+		fd_grpMbel.bottom = new FormAttachment(100);
 		fd_grpMbel.top = new FormAttachment(0);
 		fd_grpMbel.left = new FormAttachment(0);
 		grpMbel.setLayoutData(fd_grpMbel);
@@ -434,15 +491,27 @@ public class Gui {
 		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
 		tbtmEigenschaften.setControl(composite_1);
 		formToolkit.paintBordersFor(composite_1);
+		composite_1.setLayout(new FormLayout());
 		
 		Group grpObjektobjektname = new Group(composite_1, SWT.NONE);
+		grpObjektobjektname.setLayout(new FormLayout());
+		FormData fd_grpObjektobjektname = new FormData();
+		fd_grpObjektobjektname.right = new FormAttachment(100);
+		fd_grpObjektobjektname.top = new FormAttachment(0);
+		fd_grpObjektobjektname.bottom = new FormAttachment(100);
+		fd_grpObjektobjektname.left = new FormAttachment(0);
+		grpObjektobjektname.setLayoutData(fd_grpObjektobjektname);
 		grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
-		grpObjektobjektname.setBounds(0, 0, 242, 491);
 		formToolkit.adapt(grpObjektobjektname);
 		formToolkit.paintBordersFor(grpObjektobjektname);
 		
 		Group grpPosition = new Group(grpObjektobjektname, SWT.NONE);
-		grpPosition.setBounds(10, 15, 222, 71);
+		FormData fd_grpPosition = new FormData();
+		fd_grpPosition.bottom = new FormAttachment(0, 79);
+		fd_grpPosition.right = new FormAttachment(0, 229);
+		fd_grpPosition.top = new FormAttachment(0, 5);
+		fd_grpPosition.left = new FormAttachment(0, 5);
+		grpPosition.setLayoutData(fd_grpPosition);
 		grpPosition.setText("Position");
 		formToolkit.adapt(grpPosition);
 		formToolkit.paintBordersFor(grpPosition);
@@ -453,11 +522,11 @@ public class Gui {
 		lblX.setText("X:");
 		
 		text = new Text(grpPosition, SWT.BORDER);
-		text.setBounds(26, 18, 186, 21);
+		text.setBounds(26, 18, 188, 21);
 		formToolkit.adapt(text, true, true);
 		
 		text_1 = new Text(grpPosition, SWT.BORDER);
-		text_1.setBounds(26, 42, 186, 21);
+		text_1.setBounds(26, 42, 188, 21);
 		formToolkit.adapt(text_1, true, true);
 		
 		Label lblY = new Label(grpPosition, SWT.NONE);
@@ -466,12 +535,20 @@ public class Gui {
 		formToolkit.adapt(lblY, true, true);
 		
 		Button btnbernehmen = new Button(grpObjektobjektname, SWT.NONE);
+		FormData fd_btnbernehmen = new FormData();
+		fd_btnbernehmen.right = new FormAttachment(100, -6);
+		fd_btnbernehmen.bottom = new FormAttachment(100, -6);
+		btnbernehmen.setLayoutData(fd_btnbernehmen);
 		btnbernehmen.setEnabled(false);
-		btnbernehmen.setBounds(133, 456, 99, 25);
 		formToolkit.adapt(btnbernehmen, true, true);
 		btnbernehmen.setText("\u00DCbernehmen");
 		
 		Button btnAutomatischbernehmen = new Button(grpObjektobjektname, SWT.CHECK);
+		fd_btnbernehmen.left = new FormAttachment(0, 133);
+		FormData fd_btnAutomatischbernehmen = new FormData();
+		fd_btnAutomatischbernehmen.bottom = new FormAttachment(100, -10);
+		fd_btnAutomatischbernehmen.left = new FormAttachment(0, 6);
+		btnAutomatischbernehmen.setLayoutData(fd_btnAutomatischbernehmen);
 		btnAutomatischbernehmen.setSelection(true);
 		btnAutomatischbernehmen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -480,9 +557,10 @@ public class Gui {
 				else btnbernehmen.setEnabled(true);
 			}
 		});
-		btnAutomatischbernehmen.setBounds(10, 456, 117, 25);
 		formToolkit.adapt(btnAutomatischbernehmen, true, true);
 		btnAutomatischbernehmen.setText("auto \u00DCbernehmen");
+		
+		
 		
 		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.addMouseMoveListener(new MouseMoveListener() {
