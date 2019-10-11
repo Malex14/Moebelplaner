@@ -1,6 +1,7 @@
 package desinger;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -39,11 +40,13 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.DragDetectEvent;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,7 +59,7 @@ import org.eclipse.swt.layout.GridData;
 @SuppressWarnings("unused")
 public class Gui {
 
-	protected Shell shlMbelplaner;
+	protected static Shell shlMbelplaner;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private static Canvas canvas;
 	private Text text;
@@ -71,8 +74,8 @@ public class Gui {
 	private Float start_mouse;
 	private ArrayList<Moebel> moebel = new ArrayList<>();
 	private String savepath;
-	private boolean hasStar = false;
-	private static boolean hasChanged = false;
+	private static boolean hasChanged;
+	private static boolean hasStar = false;
 	
 	
 	/**
@@ -101,10 +104,6 @@ public class Gui {
 		shlMbelplaner.layout();
 		
 		while (!shlMbelplaner.isDisposed()) {
-			if(hasChanged && !hasStar ) {
-				shlMbelplaner.setText(shlMbelplaner.getText()+"*");
-				hasStar = true;
-			}
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -122,7 +121,6 @@ public class Gui {
 		
 		
 		shlMbelplaner = new Shell();
-		//.setImage(SWTResourceManager.getImage(Gui.class, "/icons/icon32.png"));
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
 		shlMbelplaner.setText("M\u00F6belplaner - Unbennant");
 		shlMbelplaner.setSize(899, 576);
@@ -158,8 +156,8 @@ public class Gui {
 				shlMbelplaner.setText("M\u00F6belplaner - Unbennant");
 			}
 		});
-		mntmNeu.setText("Neu");
-		
+		mntmNeu.setText("Neu\tStrg+N");
+		mntmNeu.setAccelerator(SWT.CONTROL+'n');
 		
 		
 		//ÖFFNEN
@@ -215,7 +213,8 @@ public class Gui {
 				} catch(Exception e1) {};
 			}
 		});
-		mntmOeffnen.setText("\u00D6ffnen...");
+		mntmOeffnen.setText("\u00D6ffnen...\tStrg+O");
+		mntmOeffnen.setAccelerator(SWT.CONTROL+'o');
 		
 		
 		//SPEICHERN
@@ -224,30 +223,11 @@ public class Gui {
 		mntmSpeichern.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					JSONArray ja = new JSONArray(); 
-					for (Moebel moebel2 : moebel) {
-						ja.put(moebel2.getJSON());
-					}
-					if(savepath == null) {
-					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
-					fileDialog.setFilterExtensions(new String[] {"*.mob"});
-					fileDialog.setText("Speichern");
-					fileDialog.setOverwrite(true);
-					savepath = fileDialog.open();	
-					}
-					FileOutputStream fos = new FileOutputStream(savepath);
-					ObjectOutputStream oos = new ObjectOutputStream(fos);
-					oos.writeUTF(ja.toString());
-					oos.close();
-	            	fos.close();
-	            	hasStar = hasChanged = false;
-	            	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
-				}catch(Exception e1) {}
+				save();
 			}
 		});
-		mntmSpeichern.setText("Speichern");
-		
+		mntmSpeichern.setText("Speichern\tStrg+S");
+		mntmSpeichern.setAccelerator(SWT.CONTROL+'s');
 		
 		//SPEICHERTN UNTER
 		
@@ -276,8 +256,8 @@ public class Gui {
 				
 			}
 		});
-		mntmSpeichernUnter.setText("Speichern unter...");
-		
+		mntmSpeichernUnter.setText("Speichern unter...\tStrg+Umschalt+S");
+		mntmSpeichernUnter.setAccelerator(SWT.CONTROL+SWT.SHIFT+'s');
 		
 		//EXPORTIEREN
 		
@@ -319,7 +299,8 @@ public class Gui {
 				}
 			}
 		});
-		mntmExportieren.setText("Exportieren...");
+		mntmExportieren.setText("Exportieren...\tStrg+E");
+		mntmExportieren.setAccelerator(SWT.CONTROL+'e');
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
@@ -330,7 +311,8 @@ public class Gui {
 				shlMbelplaner.close();
 			}
 		});
-		mntmBeenden.setText("Beenden");
+		mntmBeenden.setText("Beenden\tStrg+Q");
+		mntmBeenden.setAccelerator(SWT.CONTROL+'q');
 		
 		MenuItem mntmWerkzeuge = new MenuItem(menu, SWT.CASCADE);
 		mntmWerkzeuge.setText("Werkzeuge");
@@ -338,14 +320,20 @@ public class Gui {
 		Menu menu_2 = new Menu(mntmWerkzeuge);
 		mntmWerkzeuge.setMenu(menu_2);
 		
-		MenuItem mntmVerschiebewerkzeug = new MenuItem(menu_2, SWT.RADIO);
-		mntmVerschiebewerkzeug.setSelection(true);
-		mntmVerschiebewerkzeug.setText("Verschiebewerkzeug");
+		MenuItem mntmUniversalwerkzeug = new MenuItem(menu_2, SWT.RADIO);
+		mntmUniversalwerkzeug.setSelection(true);
+		mntmUniversalwerkzeug.setText("Universalwerkzeug");
 		
 		MenuItem mntmEinfgenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
 		mntmEinfgenWerkzeug.setText("Einf\u00FCgen Werkzeug");
 		
 		MenuItem mntmEntfernenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
+		mntmEntfernenWerkzeug.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+			}
+		});
 		mntmEntfernenWerkzeug.setText("Entfernen Werkzeug");
 		
 		MenuItem mntmGrenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
@@ -699,6 +687,32 @@ public class Gui {
 				}
 			}
 		});
+		
+		shlMbelplaner.addListener(SWT.Close, new Listener() {
+		      public void handleEvent(Event event) {
+		    	  if(hasChanged) {
+						MessageBox msg = new MessageBox(shlMbelplaner,SWT.YES|SWT.NO|SWT.CANCEL);
+						msg.setText("Möbelplaner");
+						msg.setMessage("Möchten sie die Änderungen speichern?");
+						switch(msg.open()) {
+						case 64:
+							if(!save()) {
+								event.doit = false;
+								break;
+							}
+						case 128:
+							event.doit = true;
+							break;
+						case 256:
+							event.doit = false;
+							break;
+						default:
+							event.doit = false;
+							break;
+						}	
+					}else event.doit = true;
+		      }
+		});
 	}
 	
 	public static Canvas getCanvas() {
@@ -715,5 +729,32 @@ public class Gui {
 	}
 	public static void sethasChanged(boolean changed) {
 		hasChanged = changed;
+		if(changed && !hasStar ) {
+			shlMbelplaner.setText(shlMbelplaner.getText()+"*");
+			hasStar = true;
+		}
+	}
+	private boolean save() {
+		try {
+			JSONArray ja = new JSONArray(); 
+			for (Moebel moebel2 : moebel) {
+				ja.put(moebel2.getJSON());
+			}
+			if(savepath == null) {
+			FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
+			fileDialog.setFilterExtensions(new String[] {"*.mob"});
+			fileDialog.setText("Speichern");
+			fileDialog.setOverwrite(true);
+			savepath = fileDialog.open();	
+			}
+			FileOutputStream fos = new FileOutputStream(savepath);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeUTF(ja.toString());
+			oos.close();
+        	fos.close();
+        	hasStar = false;
+        	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
+        	return true;
+		}catch(Exception e1) {return false;}
 	}
 }
