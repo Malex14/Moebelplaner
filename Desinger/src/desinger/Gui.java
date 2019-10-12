@@ -34,13 +34,16 @@ import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.events.DragDetectListener;
@@ -50,6 +53,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -76,7 +81,7 @@ public class Gui {
 	private String savepath;
 	private static boolean hasChanged;
 	private static boolean hasStar = false;
-	
+	private Device device = Display.getCurrent();
 	
 	/**
 	 * Launch the application.
@@ -265,7 +270,7 @@ public class Gui {
 		mntmExportieren.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
+				/*try {
 					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
 					fileDialog.setFilterExtensions(new String[] {"*.jpeg","*.png","*.bmp"});
 					fileDialog.setText("Exportieren");
@@ -296,6 +301,85 @@ public class Gui {
 					image.dispose();
 				} catch (Exception e2) {
 					
+				}*/
+				Export export = new Export(shlMbelplaner);
+				if (export.open()==0) {
+					if (export.getBtnAbsolut()==true) {
+						try {
+							FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
+							fileDialog.setFilterExtensions(new String[] {"*.jpeg","*.png","*.bmp"});
+							fileDialog.setText("Exportieren");
+							fileDialog.setOverwrite(true);
+							Image image = new Image(Display.getCurrent(), canvas.getBounds());
+							String path = fileDialog.open();
+							int fileType = -1;
+							switch (fileDialog.getFilterIndex()) {
+							case 0:
+								fileType = SWT.IMAGE_JPEG;
+								break;
+							case 1:
+								fileType = SWT.IMAGE_PNG;
+								break;
+							case 2:
+								fileType = SWT.IMAGE_BMP;
+								break;
+							default:
+								break;
+							}
+							GC gc = new GC(image);
+							canvas.print(gc);
+							Transform transform = new Transform(device);
+							transform.scale(export.getWidth()/canvas.getBounds().width, export.getHeight()/canvas.getBounds().height);
+							gc.setTransform(transform);
+							ImageLoader loader = new ImageLoader();
+							loader.data = new ImageData[] {image.getImageData()};
+							if(fileType == -1) throw new Exception();
+							loader.save(path, fileType);
+							gc.dispose();
+							image.dispose();
+						} catch (Exception e2) {
+							
+						}
+					}else {
+						try {
+							FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
+							fileDialog.setFilterExtensions(new String[] {"*.jpeg","*.png","*.bmp"});
+							fileDialog.setText("Exportieren");
+							fileDialog.setOverwrite(true);
+							String path = fileDialog.open();
+							int fileType = -1;
+							switch (fileDialog.getFilterIndex()) {
+							case 0:
+								fileType = SWT.IMAGE_JPEG;
+								break;
+							case 1:
+								fileType = SWT.IMAGE_PNG;
+								break;
+							case 2:
+								fileType = SWT.IMAGE_BMP;
+								break;
+							default:
+								break;
+							}
+							Image image = new Image(Display.getCurrent(), (int)(canvas.getBounds().width * ((float)export.getPercent() /100)), (int)(canvas.getBounds().height * ((float)export.getPercent() /100)));
+							
+							
+							GC gc = new GC(image);
+							Transform transform = new Transform(device);
+							transform.scale((float)export.getPercent() /100, (float)export.getPercent() /100);
+							gc.setTransform(transform);
+							canvas.print(gc);
+							
+							ImageLoader loader = new ImageLoader();
+							loader.data = new ImageData[] {image.getImageData()};
+							if(fileType == -1) throw new Exception();
+							loader.save(path, fileType);
+							gc.dispose();
+							image.dispose();
+						} catch (Exception e2) {
+							
+						}
+					}
 				}
 			}
 		});
