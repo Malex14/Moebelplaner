@@ -650,7 +650,7 @@ public class Gui {
 		
 		
 		
-		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent arg0) {
 				try {
