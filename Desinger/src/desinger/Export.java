@@ -45,48 +45,57 @@ public class Export extends Dialog{
 		
 		
 		spinner = new Spinner(container, SWT.BORDER);
-		spinner.setEnabled(false);
 		spinner.setBounds(11, 61, 53, 22);
 		spinner.setMaximum(1000);
+		spinner.setMinimum(1);
 		spinner.setSelection(100);
 		spinner.setBounds(106, 8, 68, 22);
 		
 		Label label = new Label(container, SWT.NONE);
-		label.setEnabled(false);
 		label.setBounds(11, 91, 10, 15);
 		label.setText("%");
 		label.setBounds(180, 11, 10, 15);
 		
 		Button btnSeitenverhltnisBeibehalten = new Button(container, SWT.CHECK);
+		btnSeitenverhltnisBeibehalten.setEnabled(false);
 		btnSeitenverhltnisBeibehalten.setBounds(11, 114, 169, 16);
 		btnSeitenverhltnisBeibehalten.setSelection(true);
 		btnSeitenverhltnisBeibehalten.setBounds(20, 54, 169, 16);
 		btnSeitenverhltnisBeibehalten.setText("Seitenverh\u00E4ltnis beibehalten");
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
+		lblNewLabel.setEnabled(false);
 		lblNewLabel.setBounds(30, 76, 56, 15);
 		lblNewLabel.setText("Pixelgr\u00F6\u00DFe");
 		
 		spinner_1 = new Spinner(container, SWT.BORDER);
+		spinner_1.setEnabled(false);
+		spinner_1.setMaximum(2147483647);
 		spinner_1.setBounds(106, 98, 68, 22);
 		
 		spinner_2 = new Spinner(container, SWT.BORDER);
+		spinner_2.setEnabled(false);
+		spinner_2.setMaximum(2147483647);
 		spinner_2.setBounds(106, 126, 68, 22);
 		
 		Label lblPixel = new Label(container, SWT.NONE);
+		lblPixel.setEnabled(false);
 		lblPixel.setBounds(180, 101, 55, 15);
 		lblPixel.setText("Pixel");
 		
 		Label label_1 = new Label(container, SWT.NONE);
+		label_1.setEnabled(false);
 		label_1.setText("Pixel");
 		label_1.setBounds(180, 129, 55, 15);
 		
 		Label lblBreite = new Label(container, SWT.NONE);
+		lblBreite.setEnabled(false);
 
 		lblBreite.setBounds(40, 101, 55, 15);
 		lblBreite.setText("Breite:");
 		
 		Label lblHhe = new Label(container, SWT.NONE);
+		lblHhe.setEnabled(false);
 
 		lblHhe.setBounds(40, 129, 55, 15);
 		lblHhe.setText("H\u00F6he:");
@@ -134,6 +143,11 @@ public class Export extends Dialog{
 		btnRadioButton.setSelection(true);
 		btnAbsolut.setText("Absolut:");
 		btnAbsolut.setBounds(10, 32, 90, 16);
+		spinner_1.setMinimum(1);
+		spinner_1.setSelection(Gui.getCanvas().getBounds().width);
+		spinner_2.setMinimum(1);
+		spinner_2.setSelection(Gui.getCanvas().getBounds().height);
+		System.out.println(Gui.getCanvas().getBounds().height);
 		return container;
 	}
 	

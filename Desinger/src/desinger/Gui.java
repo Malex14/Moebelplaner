@@ -328,17 +328,14 @@ public class Gui {
 							}
 							GC gc = new GC(image);
 							canvas.print(gc);
-							Transform transform = new Transform(device);
-							transform.scale(export.getWidth()/canvas.getBounds().width, export.getHeight()/canvas.getBounds().height);
-							gc.setTransform(transform);
 							ImageLoader loader = new ImageLoader();
-							loader.data = new ImageData[] {image.getImageData()};
+							loader.data = new ImageData[] {image.getImageData().scaledTo(export.getWidth(), export.getHeight())};
 							if(fileType == -1) throw new Exception();
 							loader.save(path, fileType);
 							gc.dispose();
 							image.dispose();
 						} catch (Exception e2) {
-							
+							e2.printStackTrace();
 						}
 					}else {
 						try {
@@ -377,7 +374,7 @@ public class Gui {
 							gc.dispose();
 							image.dispose();
 						} catch (Exception e2) {
-							
+							System.out.println("a");
 						}
 					}
 				}
