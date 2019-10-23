@@ -82,12 +82,16 @@ public class Gui {
 	private static boolean hasChanged;
 	private static boolean hasStar = false;
 	private Device device = Display.getCurrent();
+	private static String openPath;
 	
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		try {
+			openPath = args.length > 0 ? args[0] : null;
+		} catch (Exception e) {e.printStackTrace();}
 		try {
 			Gui window = new Gui();
 			window.open();
@@ -566,10 +570,6 @@ public class Gui {
 		trtmMoebel.setText("M\u00F6bel");
 		trtmMoebel.setExpanded(true);
 		
-		TreeItem trtmFenster = new TreeItem(tree, SWT.NONE);
-		trtmFenster.setText("Fenster");
-		trtmFenster.setExpanded(true);
-		
 		TabItem tbtmEigenschaften = new TabItem(tabFolder, SWT.NONE);
 		tbtmEigenschaften.setText("Eigenschaften");
 		
@@ -690,7 +690,14 @@ public class Gui {
 						}
 						if(start_angle == null) start_angle = tmp_moebel.getAngle();
 						if(start_mouse == null) start_mouse = angle;
-						tmp_moebel.setAngle((start_angle +(angle - start_mouse)) % 360);
+						angle = (start_angle +(angle - start_mouse)) % 360;
+						/*if(angle < 5 && angle > 355) {
+							angle = 0;
+						}
+						if(angle < 185 && angle > 175) {
+							angle = 180;
+						}*/
+						tmp_moebel.setAngle(angle);
 					}
 				} catch (Exception e) {}
 			}
@@ -794,6 +801,48 @@ public class Gui {
 					}else event.doit = true;
 		      }
 		});
+		
+		if(openPath != null) {
+			try {
+				savepath = openPath;
+				FileInputStream fis = new FileInputStream(savepath);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				String jsonIn = ois.readUTF();
+				ois.close();
+        		fis.close();
+        		
+        		JSONArray ja = new JSONArray(jsonIn);
+        		for (Moebel moebel : moebel) {
+        			moebel.hide(Gui.getCanvas());
+        		}
+        		moebel = new ArrayList<Moebel>();
+        		for (int i = 0; i < ja.length(); i++) {
+        			JSONObject jo = new JSONObject(ja.get(i).toString());
+        			switch (jo.getString("type")) {
+        			case "desinger.TestObjekt":
+        				moebel.add(new TestObjekt(Gui.getCanvas(), jo.getString("name")));
+        				break;
+        			case "desinger.ItemTisch":
+        				moebel.add(new ItemTisch(Gui.getCanvas(), jo.getString("name")));
+        				break;
+        			case "desinger.ItemrunderTisch":
+        				moebel.add(new ItemrunderTisch(Gui.getCanvas(), jo.getString("name")));
+        				break;
+        			case "desinger.ItemWaschmaschine":
+        				moebel.add(new ItemWaschmaschine(Gui.getCanvas(), jo.getString("name")));
+        				break;
+        			default:
+        				throw new IOException();
+        			}
+        			
+        			Moebel tmp = moebel.get(moebel.size()-1);
+        			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
+        		}
+        		hasStar = hasChanged = false;
+        		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
+				
+			} catch(Exception e1) {};
+		}
 	}
 	
 	public static Canvas getCanvas() {
