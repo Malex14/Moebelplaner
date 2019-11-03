@@ -6,9 +6,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class TestObjekt extends Moebel{
 	
-	public TestObjekt(Canvas c, String... objName) {
+	public TestObjekt(Canvas c,String objName) {
 		Gui.sethasChanged(true);
-		name = objName[0]; 
+		name = objName; 
 		canvas = c;
 		x = (int)(Math.random()* Gui.getCanvas().getBounds().width);
 		y = (int)(Math.random()* Gui.getCanvas().getBounds().height);

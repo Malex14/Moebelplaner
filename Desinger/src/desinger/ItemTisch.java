@@ -7,9 +7,9 @@ import org.eclipse.swt.widgets.Canvas;
 
 public class ItemTisch extends Moebel{
 
-	public ItemTisch(Canvas c, String... objName) {
+	public ItemTisch(Canvas c,String objName) {
 		Gui.sethasChanged(true);
-		name = objName[0]; 
+		name = objName; 
 		canvas = c;
 		x = 50;
 		y = 50;

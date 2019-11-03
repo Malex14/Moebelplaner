@@ -7,16 +7,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Menu;
@@ -40,10 +37,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.internal.image.GIFFileFormat;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.jface.bindings.keys.KeyStroke;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.events.DragDetectListener;
@@ -53,13 +48,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
+
 
 @SuppressWarnings("unused")
 public class Gui {
@@ -196,30 +188,14 @@ public class Gui {
             		moebel = new ArrayList<Moebel>();
             		for (int i = 0; i < ja.length(); i++) {
             			JSONObject jo = new JSONObject(ja.get(i).toString());
-            			switch (jo.getString("type")) {
-            			case "desinger.TestObjekt":
-            				moebel.add(new TestObjekt(Gui.getCanvas(), jo.getString("name")));
-            				break;
-            			case "desinger.ItemTisch":
-            				moebel.add(new ItemTisch(Gui.getCanvas(), jo.getString("name")));
-            				break;
-            			case "desinger.ItemrunderTisch":
-            				moebel.add(new ItemrunderTisch(Gui.getCanvas(), jo.getString("name")));
-            				break;
-            			case "desinger.ItemWaschmaschine":
-            				moebel.add(new ItemWaschmaschine(Gui.getCanvas(), jo.getString("name")));
-            				break;
-            			default:
-            				throw new IOException();
-            			}
-            			
+            			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {Gui.getCanvas(),jo.getString("name")}));
             			Moebel tmp = moebel.get(moebel.size()-1);
-            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
+            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight")); 
             		}
             		hasStar = hasChanged = false;
             		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 					}
-				} catch(Exception e1) {};
+				} catch(Exception e1) {e1.printStackTrace();};
 			}
 		});
 		mntmOeffnen.setText("\u00D6ffnen...\tStrg+O");
@@ -277,38 +253,6 @@ public class Gui {
 		mntmExportieren.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				/*try {
-					FileDialog fileDialog = new FileDialog(shlMbelplaner, SWT.SAVE);
-					fileDialog.setFilterExtensions(new String[] {"*.jpeg","*.png","*.bmp"});
-					fileDialog.setText("Exportieren");
-					fileDialog.setOverwrite(true);
-					Image image = new Image(Display.getCurrent(), canvas.getBounds());
-					String path = fileDialog.open();
-					int fileType = -1;
-					switch (fileDialog.getFilterIndex()) {
-					case 0:
-						fileType = SWT.IMAGE_JPEG;
-						break;
-					case 1:
-						fileType = SWT.IMAGE_PNG;
-						break;
-					case 2:
-						fileType = SWT.IMAGE_BMP;
-						break;
-					default:
-						break;
-					}
-					GC gc = new GC(image);
-					canvas.print(gc);
-					ImageLoader loader = new ImageLoader();
-					loader.data = new ImageData[] {image.getImageData()};
-					if(fileType == -1) throw new Exception();
-					loader.save(path, fileType);
-					gc.dispose();
-					image.dispose();
-				} catch (Exception e2) {
-					
-				}*/
 				Export export = new Export(shlMbelplaner);
 				if (export.open()==0) {
 					if (export.getBtnAbsolut()==true) {
@@ -501,7 +445,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemTisch(getCanvas(),dialog.getValue()));
+					moebel.add(new ItemTisch(Gui.getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -525,7 +469,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemrunderTisch(getCanvas(),dialog.getValue()));
+					moebel.add(new ItemrunderTisch(Gui.getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -547,7 +491,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemWaschmaschine(getCanvas(),dialog.getValue()));
+					moebel.add(new ItemWaschmaschine(Gui.getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -766,7 +710,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new TestObjekt(getCanvas(),dialog.getValue()));
+					moebel.add(new TestObjekt(Gui.getCanvas(),dialog.getValue()));
 					moebel.get(moebel.size()-1).testMethode();
 					
 				}
@@ -815,23 +759,7 @@ public class Gui {
         		moebel = new ArrayList<Moebel>();
         		for (int i = 0; i < ja.length(); i++) {
         			JSONObject jo = new JSONObject(ja.get(i).toString());
-        			switch (jo.getString("type")) {
-        			case "desinger.TestObjekt":
-        				moebel.add(new TestObjekt(Gui.getCanvas(), jo.getString("name")));
-        				break;
-        			case "desinger.ItemTisch":
-        				moebel.add(new ItemTisch(Gui.getCanvas(), jo.getString("name")));
-        				break;
-        			case "desinger.ItemrunderTisch":
-        				moebel.add(new ItemrunderTisch(Gui.getCanvas(), jo.getString("name")));
-        				break;
-        			case "desinger.ItemWaschmaschine":
-        				moebel.add(new ItemWaschmaschine(Gui.getCanvas(), jo.getString("name")));
-        				break;
-        			default:
-        				throw new IOException();
-        			}
-        			
+        			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {Gui.getCanvas(),jo.getString("name")}));
         			Moebel tmp = moebel.get(moebel.size()-1);
         			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
         		}
