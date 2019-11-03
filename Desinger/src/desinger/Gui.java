@@ -253,14 +253,17 @@ public class Gui {
 					fileDialog.setFilterExtensions(new String[] {"*.mob"});
 					fileDialog.setText("Speichern unter");
 					fileDialog.setOverwrite(true);
-					savepath = fileDialog.open();
-					FileOutputStream fos = new FileOutputStream(savepath);
-					ObjectOutputStream oos = new ObjectOutputStream(fos);
-					oos.writeUTF(ja.toString());
-					oos.close();
-	            	fos.close();
-	            	hasStar = hasChanged = false;
-	            	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
+					String tmp_savepath = fileDialog.open();
+					if(tmp_savepath != null) {
+						savepath = tmp_savepath;
+						FileOutputStream fos = new FileOutputStream(savepath);
+						ObjectOutputStream oos = new ObjectOutputStream(fos);
+						oos.writeUTF(ja.toString());
+						oos.close();
+	            		fos.close();
+	            		hasStar = hasChanged = false;
+	            		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
+					}
 				}catch(Exception e1) {}
 				
 			}
@@ -362,17 +365,11 @@ public class Gui {
 							default:
 								break;
 							}
-							Image image = new Image(Display.getCurrent(), (int)(canvas.getBounds().width * ((float)export.getPercent() /100)), (int)(canvas.getBounds().height * ((float)export.getPercent() /100)));
-							
-							
+							Image image = new Image(Display.getCurrent(), canvas.getBounds());
 							GC gc = new GC(image);
-							Transform transform = new Transform(device);
-							transform.scale((float)export.getPercent() /100, (float)export.getPercent() /100);
-							gc.setTransform(transform);
 							canvas.print(gc);
-							
 							ImageLoader loader = new ImageLoader();
-							loader.data = new ImageData[] {image.getImageData()};
+							loader.data = new ImageData[] {image.getImageData().scaledTo((int)(canvas.getBounds().width * (float)(export.getPercent()/100)), (int)(canvas.getBounds().height * (float)(export.getPercent()/100)))};
 							if(fileType == -1) throw new Exception();
 							loader.save(path, fileType);
 							gc.dispose();
@@ -882,7 +879,7 @@ public class Gui {
 			oos.writeUTF(ja.toString());
 			oos.close();
         	fos.close();
-        	hasStar = false;
+        	hasStar = hasChanged = false;
         	shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
         	return true;
 		}catch(Exception e1) {return false;}
