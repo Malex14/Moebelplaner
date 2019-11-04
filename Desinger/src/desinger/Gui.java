@@ -51,6 +51,8 @@ import org.json.JSONObject;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.GestureListener;
+import org.eclipse.swt.events.GestureEvent;
 
 
 @SuppressWarnings("unused")
@@ -75,6 +77,7 @@ public class Gui {
 	private static boolean hasStar = false;
 	private Device device = Display.getCurrent();
 	private static String openPath;
+	private boolean gesture = false;
 	
 	/**
 	 * Launch the application.
@@ -589,6 +592,15 @@ public class Gui {
 		
 		
 		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
+		canvas.addGestureListener(new GestureListener() {
+			public void gesture(GestureEvent arg0) {
+				if(arg0.detail == SWT.GESTURE_BEGIN)gesture = true;
+				if(arg0.detail == SWT.GESTURE_END)gesture = false;
+				if(gesture == true && arg0.detail == SWT.GESTURE_MAGNIFY) {
+					double mag = arg0.magnification;
+				}
+			}
+		});
 		canvas.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent arg0) {
 				try {
