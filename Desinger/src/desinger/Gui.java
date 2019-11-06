@@ -68,6 +68,7 @@ public class Gui {
 	private boolean drag = false;
 	private boolean mouseDown = false;
 	private Moebel dragMoebel;
+	private Moebel gestureMoebel;
 	private String newItemDialog[] = {"Name","Bitte geben Sie einen Namen ein"};
 	private Float start_angle;
 	private Float start_mouse;
@@ -78,6 +79,10 @@ public class Gui {
 	private Device device = Display.getCurrent();
 	private static String openPath;
 	private boolean gesture = false;
+	private int magHeight;
+	private int magWidth;
+	private double rotAngle;
+	
 	
 	/**
 	 * Launch the application.
@@ -594,11 +599,29 @@ public class Gui {
 		canvas = new Canvas(shlMbelplaner, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		canvas.addGestureListener(new GestureListener() {
 			public void gesture(GestureEvent arg0) {
-				if(arg0.detail == SWT.GESTURE_BEGIN)gesture = true;
-				if(arg0.detail == SWT.GESTURE_END)gesture = false;
-				if(gesture == true && arg0.detail == SWT.GESTURE_MAGNIFY) {
-					double mag = arg0.magnification;
+				try {
+				if(arg0.detail == SWT.GESTURE_BEGIN) {
+					gesture = true;
+					for (Moebel moebel2 : moebel) {
+						magHeight = moebel2.getHeight();
+						magWidth = moebel2.getWidth();
+						rotAngle = moebel2.getAngle();
+						if(moebel2.contains(new java.awt.Point(arg0.x, arg0.y)) && moebel2.isHighlighted()) gestureMoebel = moebel2;
+					}
 				}
+				if(arg0.detail == SWT.GESTURE_ROTATE) {
+					System.out.println(arg0.rotation);
+					gestureMoebel.setAngle((float)(rotAngle - arg0.rotation));
+				}
+				if(arg0.detail == SWT.GESTURE_END) {
+					gestureMoebel = null;
+					gesture = false;
+				}
+				if(gesture == true && arg0.detail == SWT.GESTURE_MAGNIFY) {
+					//double mag = arg0.magnification;
+					gestureMoebel.setDimensions((int)(magWidth*arg0.magnification), (int)(magHeight*arg0.magnification));
+				}
+				} catch(Exception e){}
 			}
 		});
 		canvas.addMouseMoveListener(new MouseMoveListener() {
