@@ -9,10 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.widgets.TabFolder;
@@ -37,7 +35,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.internal.image.GIFFileFormat;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -106,7 +103,6 @@ public class Gui {
 	 * Open the window.
 	 */
 	public void open() {
-		
 		Display display = Display.getDefault();
 		createContents();
 		shlMbelplaner.open();
@@ -116,9 +112,7 @@ public class Gui {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
-			
 		}
-		
 	}
 	
 	
@@ -379,6 +373,31 @@ public class Gui {
 		Menu menu_3 = new Menu(mntmMbel);
 		mntmMbel.setMenu(menu_3);
 		
+		MenuItem mntmVergoessern = new MenuItem(menu_3, SWT.NONE);
+		mntmVergoessern.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Moebel tmp = null;
+				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
+				if (tmp != null) tmp.setDimensions((int)(tmp.getWidth()*1.05), (int)(tmp.getHeight()*1.05));
+			}
+		});
+		mntmVergoessern.setText("Vergr\u00F6\u00DFern\tStrg++");
+		mntmVergoessern.setAccelerator(SWT.CONTROL+'+');
+		
+		// TODO Wenn man ganz kelin macht verändert sich das Seitenverhältniss und es geht nicht mehr groß!
+		MenuItem mntmVerkleinern = new MenuItem(menu_3, SWT.NONE);
+		mntmVerkleinern.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Moebel tmp = null;
+				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
+				if (tmp != null) tmp.setDimensions((int)(tmp.getWidth() > 5 ? tmp.getWidth()*0.95 : 5), (int)(tmp.getHeight() > 5 ? tmp.getHeight()*0.95 : 5));
+			}
+		});
+		mntmVerkleinern.setText("Verkleinern\tStrg+-");
+		mntmVerkleinern.setAccelerator(SWT.CONTROL+'-');
+		
 		MenuItem mntmLetztesMbelLoschen = new MenuItem(menu_3, SWT.NONE);
 		mntmLetztesMbelLoschen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -600,27 +619,21 @@ public class Gui {
 		canvas.addGestureListener(new GestureListener() {
 			public void gesture(GestureEvent arg0) {
 				try {
-				if(arg0.detail == SWT.GESTURE_BEGIN) {
-					gesture = true;
-					for (Moebel moebel2 : moebel) {
-						magHeight = moebel2.getHeight();
-						magWidth = moebel2.getWidth();
-						rotAngle = moebel2.getAngle();
-						if(moebel2.contains(new java.awt.Point(arg0.x, arg0.y)) && moebel2.isHighlighted()) gestureMoebel = moebel2;
+					if(arg0.detail == SWT.GESTURE_BEGIN) {
+						for (Moebel moebel2 : moebel) if(moebel2.contains(new java.awt.Point(arg0.x, arg0.y)) && moebel2.isHighlighted()) gestureMoebel = moebel2;
+						magHeight = gestureMoebel.getHeight();
+						magWidth = gestureMoebel.getWidth();
+						rotAngle = gestureMoebel.getAngle();
 					}
-				}
-				if(arg0.detail == SWT.GESTURE_ROTATE) {
-					System.out.println(arg0.rotation);
-					gestureMoebel.setAngle((float)(rotAngle - arg0.rotation));
-				}
-				if(arg0.detail == SWT.GESTURE_END) {
-					gestureMoebel = null;
-					gesture = false;
-				}
-				if(gesture == true && arg0.detail == SWT.GESTURE_MAGNIFY) {
-					//double mag = arg0.magnification;
-					gestureMoebel.setDimensions((int)(magWidth*arg0.magnification), (int)(magHeight*arg0.magnification));
-				}
+					if(gestureMoebel != null && arg0.detail == SWT.GESTURE_ROTATE) {
+						gestureMoebel.setAngle((float)(rotAngle - arg0.rotation));
+					}
+					if(arg0.detail == SWT.GESTURE_END) {
+						gestureMoebel = null;
+					}
+					if(gestureMoebel != null && arg0.detail == SWT.GESTURE_MAGNIFY) {
+						gestureMoebel.setDimensions((int)(magWidth*arg0.magnification), (int)(magHeight*arg0.magnification));
+					}
 				} catch(Exception e){}
 			}
 		});

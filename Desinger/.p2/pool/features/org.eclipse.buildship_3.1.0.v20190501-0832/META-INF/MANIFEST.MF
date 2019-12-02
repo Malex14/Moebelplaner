@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+
+Name: epl-v10.html
+SHA-256-Digest: mpbQ2vmKpvtKpTDTmcdCxmEhsL2uSh9/+iLSE14d9/0=
+
+Name: feature.xml
+SHA-256-Digest: dnYSvbOcEMwqo0lwpu0A5O+E0xoROqb9ufo+lwtxLRw=
+
+Name: feature.properties
+SHA-256-Digest: gHhFrsg2QmVbJ3Jcq40NO4PEcyuRinPnzjBAlvQjQsI=
+
+Name: license.html
+SHA-256-Digest: X315zLynvdLZ4DaYSopgxruQUUEadA3FOPNviC+YO24=
+
+Name: META-INF/eclipse.inf
+SHA-256-Digest: G2hFTVPngfh5NUf96Pyy87A7XIE083udjEBFy4pUc/M=
+

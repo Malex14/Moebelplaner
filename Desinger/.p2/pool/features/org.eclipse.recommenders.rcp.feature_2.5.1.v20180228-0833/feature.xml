@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.recommenders.rcp.feature"
+      label="%label"
+      version="2.5.1.v20180228-0833"
+      provider-name="%provider-name"
+      plugin="org.eclipse.recommenders.rcp">
+
+   <description url="http://www.eclipse.org/recommenders/">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import plugin="com.google.inject.multibindings" version="3.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.api" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.connector.basic" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.impl" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.spi" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.transport.file" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.transport.http" version="1.0.0" match="compatible"/>
+      <import plugin="org.apache.maven.resolver.util" version="1.0.0" match="compatible"/>
+      <import plugin="org.eclipse.aether.maven" version="3.1.0" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.recommenders.rcp"
+         download-size="164"
+         install-size="299"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.apidocs"
+         download-size="26"
+         install-size="50"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.apidocs.rcp"
+         download-size="104"
+         install-size="222"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.calls"
+         download-size="27"
+         install-size="55"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.calls.rcp"
+         download-size="68"
+         install-size="151"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.chain.rcp"
+         download-size="55"
+         install-size="114"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.completion.rcp"
+         download-size="220"
+         install-size="527"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.constructors"
+         download-size="13"
+         install-size="19"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.constructors.rcp"
+         download-size="24"
+         install-size="42"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.coordinates"
+         download-size="40"
+         install-size="77"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.coordinates.rcp"
+         download-size="94"
+         install-size="202"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.injection"
+         download-size="18"
+         install-size="28"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.jayes"
+         download-size="95"
+         install-size="185"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.jayes.io"
+         download-size="43"
+         install-size="73"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.jdt"
+         download-size="30"
+         install-size="61"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.models"
+         download-size="62"
+         install-size="125"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.models.rcp"
+         download-size="135"
+         install-size="302"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.net"
+         download-size="12"
+         install-size="17"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.overrides"
+         download-size="22"
+         install-size="40"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.overrides.rcp"
+         download-size="24"
+         install-size="40"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.subwords.rcp"
+         download-size="33"
+         install-size="58"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.statics"
+         download-size="16"
+         install-size="25"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.statics.rcp"
+         download-size="26"
+         install-size="43"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.types.rcp"
+         download-size="41"
+         install-size="76"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.utils"
+         download-size="111"
+         install-size="222"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.utils.rcp"
+         download-size="39"
+         install-size="71"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+</feature>

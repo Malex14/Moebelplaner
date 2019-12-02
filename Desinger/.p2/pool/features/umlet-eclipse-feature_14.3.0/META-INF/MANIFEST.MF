@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Build-Jdk: 1.8.0_131-1-ojdkbuild
+Built-By: Dia
+Created-By: Apache Maven 3.3.9

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.recommenders.news.rcp.feature"
+      version="2.5.1.v20180228-0833"
+      label="%label"
+      provider-name="%provider-name"
+      plugin="org.eclipse.recommenders.news">
+
+   <description url="http://www.eclipse.org/recommenders/">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.mylyn.commons.notifications.core" version="1.1" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.notifications.feed" version="1.1" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.notifications.ui" version="1.1" match="compatible"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.recommenders.news"
+         download-size="11"
+         install-size="14"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.news.api"
+         download-size="20"
+         install-size="27"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.news.impl"
+         download-size="33"
+         install-size="57"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.recommenders.news.rcp"
+         download-size="109"
+         install-size="210"
+         version="2.5.1.v20180228-0833"
+         unpack="false"/>
+
+</feature>

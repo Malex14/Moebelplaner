@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Built-By: genie.mylyn
+Created-By: Apache Maven 3.5.4
+Build-Jdk: 1.8.0_192
+
+Name: feature.xml
+SHA-256-Digest: 042DLjFVxN8Jygb7eYyRr+tbi1ZLiU3c01P3lbYIh1A=
+
+Name: feature.properties
+SHA-256-Digest: sScUwMKXVNMDDivSaOpNvWZFOFlqB4oTqZryFG07VoQ=
+
+Name: license.html
+SHA-256-Digest: Dv5NbrV590iFepPFp4HDAA9w8zkHSynRW5FCE+FLHVM=
+

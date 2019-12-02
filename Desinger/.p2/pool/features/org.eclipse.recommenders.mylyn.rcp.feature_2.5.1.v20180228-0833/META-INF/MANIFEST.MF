@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Built-By: genie.recommenders
+Created-By: Apache Maven 3.5.2
+Build-Jdk: 1.8.0_162
+
+Name: feature.xml
+SHA-256-Digest: zs0zXaxAY+r49/k1wldWJAXGXbQsvjBVvwlqquZGuBo=
+
+Name: feature.properties
+SHA-256-Digest: XRv3fr0Z6/PmYAt/6LKWwXGPpCCPWLxw9DggiamnKs4=
+
+Name: license.html
+SHA-256-Digest: Dv5NbrV590iFepPFp4HDAA9w8zkHSynRW5FCE+FLHVM=
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.wb.swing.doc.user.feature"
+      label="%featureName"
+      version="1.9.2.201812270937"
+      provider-name="%providerName"
+      plugin="org.eclipse.wb.swing.doc.user"
+      image="eclipse_update_120.jpg">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import feature="org.eclipse.wb.doc.user.feature" version="1.9.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.wb.swing.doc.user"
+         download-size="8170"
+         install-size="8436"
+         version="1.9.1.201812270937"
+         unpack="false"/>
+
+</feature>
