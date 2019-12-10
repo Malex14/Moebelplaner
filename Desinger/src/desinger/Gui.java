@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Menu;
@@ -79,7 +81,7 @@ public class Gui {
 	private int magHeight;
 	private int magWidth;
 	private double rotAngle;
-	
+	private String currentTool = "universal";
 	
 	/**
 	 * Launch the application.
@@ -349,6 +351,12 @@ public class Gui {
 		mntmWerkzeuge.setMenu(menu_2);
 		
 		MenuItem mntmUniversalwerkzeug = new MenuItem(menu_2, SWT.RADIO);
+		mntmUniversalwerkzeug.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				currentTool = "universal";
+			}
+		});
 		mntmUniversalwerkzeug.setSelection(true);
 		mntmUniversalwerkzeug.setText("Universalwerkzeug");
 		
@@ -359,7 +367,7 @@ public class Gui {
 		mntmEntfernenWerkzeug.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				currentTool = "remove";
 			}
 		});
 		mntmEntfernenWerkzeug.setText("Entfernen Werkzeug");
@@ -639,82 +647,108 @@ public class Gui {
 		});
 		canvas.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent arg0) {
-				try {
-					if(drag) dragMoebel.setPosition(arg0.x, arg0.y);
-					if(mouseDown) {
-						Moebel tmp_moebel = null;
-						for (Moebel moebel : moebel) {
-							if(moebel.isHighlighted()) tmp_moebel = moebel;
-						}
-						int ank = 0;
-						int geg = 0;
-						float angle = 0;
-						if (arg0.x < tmp_moebel.getX()) {
-							if(arg0.y <= tmp_moebel.getY()) {
-								//links oben
-								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
-								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
-								angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+270;
+				switch (currentTool) {
+				case "universal":
+					try {
+						if(drag) dragMoebel.setPosition(arg0.x, arg0.y);
+						if(mouseDown) {
+							Moebel tmp_moebel = null;
+							for (Moebel moebel : moebel) {
+								if(moebel.isHighlighted()) tmp_moebel = moebel;
 							}
-							else if(arg0.y > tmp_moebel.getY()) {
-								//links unten
-								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
-								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
-								angle = (float) (Math.toDegrees((float)Math.atan((float)-geg/(float)ank))+270);
+							int ank = 0;
+							int geg = 0;
+							float angle = 0;
+							if (arg0.x < tmp_moebel.getX()) {
+								if(arg0.y <= tmp_moebel.getY()) {
+									//links oben
+									ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+									geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+									angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+270;
+								}
+								else if(arg0.y > tmp_moebel.getY()) {
+									//links unten
+									ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+									geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+									angle = (float) (Math.toDegrees((float)Math.atan((float)-geg/(float)ank))+270);
+								}
 							}
-						}
-						else if (arg0.x >= tmp_moebel.getX()) {
-							if(arg0.y <= tmp_moebel.getY()) {
-								//rechts oben
-								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
-								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
-								angle = (float) Math.abs(Math.toDegrees((float)Math.atan((float)geg/(float)ank))-90);
+							else if (arg0.x >= tmp_moebel.getX()) {
+								if(arg0.y <= tmp_moebel.getY()) {
+									//rechts oben
+									ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+									geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+									angle = (float) Math.abs(Math.toDegrees((float)Math.atan((float)geg/(float)ank))-90);
+								}
+								else if(arg0.y > tmp_moebel.getY()) {
+									//rechts unten
+									ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
+									geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
+									angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+90;
+								}
 							}
-							else if(arg0.y > tmp_moebel.getY()) {
-								//rechts unten
-								ank = Math.max(tmp_moebel.getX(), arg0.x)-Math.min(tmp_moebel.getX(), arg0.x);
-								geg = Math.max(tmp_moebel.getY(), arg0.y)-Math.min(tmp_moebel.getY(), arg0.y);
-								angle = (float) Math.toDegrees((float)Math.atan((float)geg/(float)ank))+90;
+							if(start_angle == null) start_angle = tmp_moebel.getAngle();
+							if(start_mouse == null) start_mouse = angle;
+							angle = (start_angle +(angle - start_mouse)) % 360;
+							/*if(angle < 5 && angle > 355) {
+								angle = 0;
 							}
+							if(angle < 185 && angle > 175) {
+								angle = 180;
+							}*/
+							tmp_moebel.setAngle(angle);
 						}
-						if(start_angle == null) start_angle = tmp_moebel.getAngle();
-						if(start_mouse == null) start_mouse = angle;
-						angle = (start_angle +(angle - start_mouse)) % 360;
-						/*if(angle < 5 && angle > 355) {
-							angle = 0;
-						}
-						if(angle < 185 && angle > 175) {
-							angle = 180;
-						}*/
-						tmp_moebel.setAngle(angle);
-					}
-				} catch (Exception e) {}
+					} catch (Exception e) {}
+					break;
+					
+				default:
+					break;
+				}
+				
+				
 			}
 		});
 		canvas.addDragDetectListener(new DragDetectListener() {
 			public void dragDetected(DragDetectEvent arg0) {
+				switch (currentTool) {
+				case "universal":
+					try {
+						for (Moebel moebel : moebel) {
+							if(moebel.isHighlighted()) dragMoebel = moebel;
+						}
+						if (dragMoebel.contains(new java.awt.Point(arg0.x,arg0.y))) drag = true; //Drag innerhalb von Moebel
+						else mouseDown = true; //Drag auﬂerhab von Moebel
+						} catch(Exception e) {}
+					break;
 				
-				try {
-				for (Moebel moebel : moebel) {
-					if(moebel.isHighlighted()) dragMoebel = moebel;
+				default:
+					break;
 				}
-				if (dragMoebel.contains(new java.awt.Point(arg0.x,arg0.y))) drag = true;
-				else mouseDown = true;
-				} catch(Exception e) {}
+				
+				
+				
 			}
 		});
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				Moebel tmp_moebel = null;
-				for (Moebel moebel : moebel) {
-					if(moebel.hasPaintListener() && moebel.contains(new java.awt.Point(e.x,e.y))) tmp_moebel = moebel;
-					moebel.setHighlight(false);
+				switch (currentTool) {
+				case "universal":
+					Moebel tmp_moebel = null;
+					for (Moebel moebel : moebel) {
+						if(moebel.hasPaintListener() && moebel.contains(new java.awt.Point(e.x,e.y))) tmp_moebel = moebel;
+						moebel.setHighlight(false);
+					}
+					if(tmp_moebel != null) {
+						tmp_moebel.setHighlight(true);
+						grpObjektobjektname.setText("Objekt: " + tmp_moebel.getName());
+					} else grpObjektobjektname.setText("Objekt: Kein Objekt ausgew‰hlt");
+					break;
+
+				default:
+					break;
 				}
-				if(tmp_moebel != null) {
-					tmp_moebel.setHighlight(true);
-					grpObjektobjektname.setText("Objekt: " + tmp_moebel.getName());
-				} else grpObjektobjektname.setText("Objekt: Kein Objekt ausgew‰hlt");
+				
 			}
 			
 			@Override
@@ -727,6 +761,21 @@ public class Gui {
 			}
 			@Override
 			public void mouseDown(MouseEvent e) {
+				switch (currentTool) {
+				case "remove":
+					Iterator<Moebel> itr = moebel.iterator();
+					while(itr.hasNext()) {
+						Moebel itrMoebel = itr.next();
+						if(itrMoebel.hasPaintListener() && itrMoebel.contains(new java.awt.Point(e.x,e.y))) {
+							itrMoebel.hide(getCanvas());
+							itr.remove();
+						}
+					}
+					break;
+
+				default:
+					break;
+				}
 			}
 		});
 		
