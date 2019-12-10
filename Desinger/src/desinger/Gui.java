@@ -819,7 +819,7 @@ public class Gui {
 		    	  if(hasChanged) {
 						MessageBox msg = new MessageBox(shlMbelplaner,SWT.YES|SWT.NO|SWT.CANCEL);
 						msg.setText("Möbelplaner");
-						msg.setMessage("Möchten sie die Änderungen speichern?");
+						msg.setMessage("Möchten Sie die Änderungen speichern?");
 						switch(msg.open()) {
 						case 64:
 							if(!save()) {
