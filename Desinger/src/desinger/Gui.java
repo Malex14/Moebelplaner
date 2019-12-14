@@ -141,6 +141,7 @@ public class Gui {
 		Menu menu_1 = new Menu(mntmDatei);
 		mntmDatei.setMenu(menu_1);
 		
+
 		
 		//NEU
 		
@@ -400,7 +401,7 @@ public class Gui {
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null) tmp.setDimensions((int)(tmp.getWidth() > 5 ? tmp.getWidth()*0.95 : 5), (int)(tmp.getHeight() > 5 ? tmp.getHeight()*0.95 : 5));
+				if (tmp != null && ((tmp.getWidth() > 50) || (tmp.getHeight() > 50))) tmp.setDimensions((int)(tmp.getWidth()*0.95), (int)(tmp.getHeight()*0.95));
 			}
 		});
 		mntmVerkleinern.setText("Verkleinern\tStrg+-");
@@ -447,6 +448,8 @@ public class Gui {
 		formToolkit.paintBordersFor(grpMbel);
 		grpMbel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
+		
+		//TODO Nicht so viel doppelter code!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
 		
 		Button btnNewButton = new Button(grpMbel, SWT.NONE);
@@ -533,6 +536,28 @@ public class Gui {
 		});
 		formToolkit.adapt(btnCreateWaschmaschine, true, true);
 		btnCreateWaschmaschine.setText("Waschmaschine");
+		
+		Button btnSchreibtisch = new Button(grpMbel, SWT.NONE);
+		btnSchreibtisch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemSchreibtisch(Gui.getCanvas(),dialog.getValue()));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnSchreibtisch, true, true);
+		btnSchreibtisch.setText("Schreibtisch");
 		fd_scale.left = new FormAttachment(0, 32);
 		
 		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
@@ -740,6 +765,7 @@ public class Gui {
 						moebel.setHighlight(false);
 					}
 					if(tmp_moebel != null) {
+						moebel.remove(tmp_moebel); moebel.add(tmp_moebel);
 						tmp_moebel.setHighlight(true);
 						grpObjektobjektname.setText("Objekt: " + tmp_moebel.getName());
 					} else grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
