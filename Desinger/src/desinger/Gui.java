@@ -13,7 +13,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Menu;
@@ -406,6 +405,25 @@ public class Gui {
 		});
 		mntmVerkleinern.setText("Verkleinern\tStrg+-");
 		mntmVerkleinern.setAccelerator(SWT.CONTROL+'-');
+		
+		new MenuItem(menu_3, SWT.SEPARATOR);
+		
+		MenuItem mntmEntfernen = new MenuItem(menu_3, SWT.NONE);
+		mntmEntfernen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Iterator<Moebel> itr = moebel.iterator();
+				while(itr.hasNext()) {
+					Moebel itrMoebel = itr.next();
+					if(itrMoebel.isHighlighted()) {
+						itrMoebel.hide(getCanvas());
+						itr.remove();
+					}
+				}
+			}
+		});
+		mntmEntfernen.setText("Entfernen\tEntf");
+		mntmEntfernen.setAccelerator(SWT.DEL);
 		
 		MenuItem mntmLetztesMbelLoschen = new MenuItem(menu_3, SWT.NONE);
 		mntmLetztesMbelLoschen.addSelectionListener(new SelectionAdapter() {
