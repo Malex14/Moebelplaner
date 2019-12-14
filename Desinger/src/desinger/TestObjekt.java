@@ -15,6 +15,7 @@ public class TestObjekt extends Moebel{
 		width = 50;
 		height = 100;
 		angle = (float)(Math.random()* 360);
+		 
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/testObjekt.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);

@@ -18,8 +18,6 @@ import org.json.JSONObject;
 
 public class Moebel{
 
-
-
 protected int x;
 protected int y;
 protected int width;
@@ -33,83 +31,92 @@ protected TreeItem trtm;
 protected String name;
 protected boolean hasPaintListener = false;
 protected boolean highlight = false;
-
+protected float scale = 1;
 	
 	
-	void setPosition(int new_x, int new_y) {
-		x = new_x;
-		y = new_y;
+	public void setPosition(int new_x, int new_y) {
+		setX(new_x);
+		setY(new_y);
 		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
-	void setAngle(float new_angle) {
+	public void setAngle(float new_angle) {
 		angle = new_angle;
 		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
-	void setDimensions(int new_width, int new_height) {
-		height = new_height;
-		width = new_width;
+	public void setDimensions(int new_width, int new_height) {
+		setHeight(new_height);
+		setWidth(new_width);
 		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
 	
-	void setX(int new_x) {
+	public void setX(int new_x) {
 		x = new_x;
 		Gui.sethasChanged(true);
+		
 		canvas.redraw();
 	}
 	
-	void setY(int new_y) {
+	public void setY(int new_y) {
 		y = new_y;
 		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
-	void setWidth(int new_width) {
+	public void setWidth(int new_width) {
 		width = new_width;
 		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 
-	void setHeight(int new_height) {
+	public void setHeight(int new_height) {
 		height = new_height;
 		Gui.sethasChanged(true);
 		canvas.redraw();
 	}
 	
-	int getX() {
+	public int getX() {
 		return x;
 	}
 	
-	int getY() {
+	public int getY() {
 		return y;
 	}
 	
-	float getAngle() {
+	public float getAngle() {
 		return angle;
 	}
 	
-	int getHeight() {
+	public int getHeight() {
 		return height;
 	}
 	
-	int getWidth() {
+	public int getWidth() {
 		return width;
 	}
 	
-	String getName() {
+	public String getName() {
 		return name;
 	}
-	
-	void testMethode() {
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+
+	public void testMethode() {
 		System.out.println(this.toString());
 	}
 	
-	JSONObject getJSON() {
+	public JSONObject getJSON() {
 		JSONObject jo = new JSONObject();
 		jo.put("name", name);
 		jo.put("x", x);
@@ -123,13 +130,13 @@ protected boolean highlight = false;
 		return jo;
 	}
 	
-	String getType() {
+	public String getType() {
 		String cl = this.getClass().toString();
 		String type[] = cl.split(" ");
 		return type[1];
 	}
 	
-	void setAll(int new_x,int new_y,int new_width,int new_height,int new_angle,boolean new_hasPaintListener,boolean new_highlight) {
+	public void setAll(int new_x,int new_y,int new_width,int new_height,int new_angle,boolean new_hasPaintListener,boolean new_highlight) {
 		x = new_x;
 		y = new_y;
 		width = new_width;
@@ -140,11 +147,11 @@ protected boolean highlight = false;
 		canvas.redraw();
 	}
 	
-	boolean hasPaintListener() {
+	public boolean hasPaintListener() {
 		return hasPaintListener;
 	}
 	
-	void draw(boolean... highlighted) {
+	public void draw(boolean... highlighted) {
 		highlight = highlighted.length > 0 ? highlighted[0] : false; 
 		try {
 		canvas.removePaintListener(paintListener);
@@ -172,7 +179,7 @@ protected boolean highlight = false;
 		canvas.redraw();
 	}
 	
-	void setHighlight(boolean highlighted) {
+	public void setHighlight(boolean highlighted) {
 
 		Gui.sethasChanged(true);
 		highlight = highlighted;
@@ -180,7 +187,7 @@ protected boolean highlight = false;
 		if(highlight) trtm.setBackground(new Color(device, /*205,232,255*/ 220,220,220)); else trtm.setBackground(new Color(device, 255,255,255));
 	}
 	
-	boolean contains(Point2D point) {
+	public boolean contains(Point2D point) {
 		if(hasPaintListener) {
 		Rectangle rect = new Rectangle(x, y, width, height);
 		AffineTransform t = new AffineTransform();
@@ -195,7 +202,7 @@ protected boolean highlight = false;
 		return false;
 	}
 	
-	void hide(Canvas canvas) {
+	public void hide(Canvas canvas) {
 		try {
 			canvas.removePaintListener(paintListener);
 			removeFromTree();
@@ -205,7 +212,7 @@ protected boolean highlight = false;
 		canvas.redraw();
 	}
 	
-	void addToTree(TreeItem treeItem, int style) {
+	public void addToTree(TreeItem treeItem, int style) {
 		trtm = new TreeItem(treeItem,style);
 		if (name != null) { 
 		trtm.setText(name);
@@ -214,15 +221,12 @@ protected boolean highlight = false;
 		}
 	}
 	
-	void removeFromTree() {
+	public void removeFromTree() {
 		trtm.dispose();
 		trtm = null;
 	}
 	
-	
-	boolean isHighlighted() {
+	public boolean isHighlighted() {
 		return highlight;
 	}
-	
-	
 }

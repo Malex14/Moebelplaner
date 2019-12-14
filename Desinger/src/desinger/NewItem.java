@@ -16,8 +16,8 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public class NewItem extends Dialog {
 
-	protected String result;
-	protected Shell shlObjektnamenDefinieren;
+	private String result;
+	private Shell shlObjektnamenDefinieren;
 	private Text text;
 
 	/**

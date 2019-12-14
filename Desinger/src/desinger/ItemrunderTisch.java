@@ -1,9 +1,8 @@
 package desinger;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ItemrunderTisch extends Moebel{
 
@@ -15,11 +14,7 @@ public class ItemrunderTisch extends Moebel{
 		y = 50;
 		width = 100;
 		height = 100;
-		angle = 0;
-		image = new Image(device, width+1, height+1);
-		GC gc = new GC(image);
-		gc.drawOval(0, 0, width, height);
-		gc.dispose();
+		image = SWTResourceManager.getImage(Gui.class, "/moebel/Tisch_rund.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
 	}
