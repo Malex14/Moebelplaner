@@ -12,12 +12,13 @@ public class TestObjekt extends Moebel{
 		canvas = c;
 		x = (int)(Math.random()* Gui.getCanvas().getBounds().width);
 		y = (int)(Math.random()* Gui.getCanvas().getBounds().height);
-		width = 50;
-		height = 100;
+		origWidth = width = 50;
+		origHeight = height = 100;
 		angle = (float)(Math.random()* 360);
 		 
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/testObjekt.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
+		
 	}	
 }

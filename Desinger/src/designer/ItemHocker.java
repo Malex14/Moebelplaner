@@ -12,8 +12,8 @@ public class ItemHocker extends Moebel {
 		canvas = c;
 		x = 50;
 		y = 50;
-		width = 40;
-		height = 40;
+		origWidth = width = 40;
+		origHeight = height = 40;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Hocker.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);

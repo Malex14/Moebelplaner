@@ -20,6 +20,8 @@ public class Moebel{
 
 protected int x;
 protected int y;
+protected int origWidth;
+protected int origHeight;
 protected int width;
 protected int height;
 protected float angle = 0;
@@ -33,7 +35,8 @@ protected boolean hasPaintListener = false;
 protected boolean highlight = false;
 protected float scale = 1;
 	
-	
+
+
 	public void setPosition(int new_x, int new_y) {
 		setX(new_x);
 		setY(new_y);
@@ -110,6 +113,10 @@ protected float scale = 1;
 
 	public void setScale(float scale) {
 		this.scale = scale;
+		width = (int)(origWidth * this.scale);
+		height = (int)(origHeight * this.scale);
+		System.out.println(origWidth);
+		canvas.redraw();
 	}
 
 	public void testMethode() {

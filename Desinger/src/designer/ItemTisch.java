@@ -12,8 +12,8 @@ public class ItemTisch extends Moebel{
 		canvas = c;
 		x = 50;
 		y = 50;
-		width = 120;
-		height = 80;
+		origWidth = width = 120;
+		origHeight = height = 80;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Tisch.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);

@@ -396,7 +396,7 @@ public class Gui {
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null) tmp.setDimensions((int)(tmp.getWidth()*1.05), (int)(tmp.getHeight()*1.05));
+				if (tmp != null) tmp.setScale(tmp.getScale()*1.05F);;
 			}
 		});
 		mntmVergoessern.setText("Vergr\u00F6\u00DFern\tStrg++");
@@ -409,7 +409,7 @@ public class Gui {
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null && ((tmp.getWidth() > 50) || (tmp.getHeight() > 50))) tmp.setDimensions((int)(tmp.getWidth()*0.95), (int)(tmp.getHeight()*0.95));
+				if (tmp != null && ((tmp.getWidth() > 5) || (tmp.getHeight() > 5))) tmp.setScale(tmp.getScale()*0.95F);;
 			}
 		});
 		mntmVerkleinern.setText("Verkleinern\tStrg+-");

@@ -12,8 +12,8 @@ public class ItemSessel extends Moebel {
 		canvas = c;
 		x = 50;
 		y = 50;
-		width = 60;
-		height = 60;
+		origWidth = width = 60;
+		origHeight = height = 60;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Sessel.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);

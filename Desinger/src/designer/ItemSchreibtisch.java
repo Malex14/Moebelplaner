@@ -12,8 +12,8 @@ public class ItemSchreibtisch extends Moebel {
 		canvas = c;
 		x = 50;
 		y = 50;
-		width = 180;
-		height = 90;
+		origWidth = width = 180;
+		origHeight = height = 90;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Schreibtisch.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);

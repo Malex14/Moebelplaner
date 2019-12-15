@@ -14,8 +14,8 @@ public class ItemWaschmaschine extends Moebel{
 		canvas = c;
 		x = 50;
 		y = 50;
-		width = 100;
-		height = 100;
+		origWidth = width = 100;
+		origHeight = height = 100;
 		angle = 0;
 		image = new Image(device, width+1, height+1);
 		GC gc = new GC(image);
