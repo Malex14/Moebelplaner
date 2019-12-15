@@ -115,12 +115,12 @@ protected float scale = 1;
 		this.scale = scale;
 		width = (int)(origWidth * this.scale);
 		height = (int)(origHeight * this.scale);
-		System.out.println(origWidth);
+
 		canvas.redraw();
 	}
 
 	public void testMethode() {
-		System.out.println(this.toString());
+		//System.out.println(this.toString());
 	}
 	
 	public JSONObject getJSON() {

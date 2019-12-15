@@ -396,20 +396,19 @@ public class Gui {
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null) tmp.setScale(tmp.getScale()*1.05F);;
+				if (tmp != null) tmp.setScale(tmp.getScale()+0.05F);;
 			}
 		});
 		mntmVergoessern.setText("Vergr\u00F6\u00DFern\tStrg++");
 		mntmVergoessern.setAccelerator(SWT.CONTROL+'+');
 		
-		// TODO Wenn man ganz kelin macht verändert sich das Seitenverhältniss und es geht nicht mehr groß!
 		MenuItem mntmVerkleinern = new MenuItem(menu_3, SWT.NONE);
 		mntmVerkleinern.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null && ((tmp.getWidth() > 5) || (tmp.getHeight() > 5))) tmp.setScale(tmp.getScale()*0.95F);;
+				if (tmp != null && ((tmp.getWidth() > 5) || (tmp.getHeight() > 5))) tmp.setScale(tmp.getScale()-0.05F);;
 			}
 		});
 		mntmVerkleinern.setText("Verkleinern\tStrg+-");
