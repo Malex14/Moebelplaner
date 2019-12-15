@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.3" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
   realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="desinger.ItemWaschmaschine" project="Desinger" 
-    file="/Desinger/src/desinger/ItemWaschmaschine.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="1" language="java" name="designer.ItemWaschmaschine" project="Designer" 
+    file="/Designer/src/designer/ItemWaschmaschine.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="483" y="247"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="desinger.TestObjekt" project="Desinger" 
-    file="/Desinger/src/desinger/TestObjekt.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="designer.TestObjekt" project="Designer" 
+    file="/Designer/src/designer/TestObjekt.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="459" y="360"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -19,7 +19,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="desinger.Export" project="Desinger" file="/Desinger/src/desinger/Export.java" 
+  <class id="3" language="java" name="designer.Export" project="Designer" file="/Designer/src/designer/Export.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="171" y="232"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -28,8 +28,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="desinger.ItemTisch" project="Desinger" 
-    file="/Desinger/src/desinger/ItemTisch.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="designer.ItemTisch" project="Designer" 
+    file="/Designer/src/designer/ItemTisch.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="460" y="469"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -37,7 +37,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="desinger.Moebel" project="Desinger" file="/Desinger/src/desinger/Moebel.java" 
+  <class id="5" language="java" name="designer.Moebel" project="Designer" file="/Designer/src/designer/Moebel.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="765" y="420"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -46,7 +46,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="desinger.Gui" project="Desinger" file="/Desinger/src/desinger/Gui.java" 
+  <class id="6" language="java" name="designer.Gui" project="Designer" file="/Designer/src/designer/Gui.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1187" y="478"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -55,8 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="desinger.ItemrunderTisch" project="Desinger" 
-    file="/Desinger/src/desinger/ItemrunderTisch.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="7" language="java" name="designer.ItemrunderTisch" project="Designer" 
+    file="/Designer/src/designer/ItemrunderTisch.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="472" y="567"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -64,7 +64,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="desinger.NewItem" project="Desinger" file="/Desinger/src/desinger/NewItem.java" 
+  <class id="8" language="java" name="designer.NewItem" project="Designer" file="/Designer/src/designer/NewItem.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="167" y="519"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -78,33 +78,41 @@
     <end type="TARGET" refId="5"/>  
   </generalization>  
   <generalization id="10">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="11">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="12">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
+  <generalization id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
   <association id="13">    
-    <bendpoint x="1078" y="437"/>    
-    <bendpoint x="1034" y="421"/>    
+    <bendpoint x="1053" y="466"/>    
+    <bendpoint x="951" y="466"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="14" name="dragMoebel"/>      
-      <multiplicity id="15" minimum="0" maximum="1"/>    
+      <attribute id="14" name="moebel">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="15" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="16">    
-    <bendpoint x="1053" y="466"/>    
-    <bendpoint x="951" y="466"/>    
+    <bendpoint x="1078" y="437"/>    
+    <bendpoint x="1034" y="421"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="17" name="moebel"/>      
-      <multiplicity id="18" minimum="0" maximum="2147483647"/>    
+      <attribute id="17" name="dragMoebel">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="18" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  

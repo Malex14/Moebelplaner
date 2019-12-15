@@ -1,4 +1,4 @@
-package desinger;
+package designer;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -37,8 +37,12 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.DragDetectEvent;
 import org.eclipse.swt.widgets.Label;
@@ -199,6 +203,11 @@ public class Gui {
             		hasStar = hasChanged = false;
             		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 					}
+				}catch (ClassNotFoundException cnfe) {
+					MessageBox err = new MessageBox(shlMbelplaner, SWT.OK | SWT.ICON_ERROR);
+					err.setText("Error");
+					err.setMessage("Dateilesefehler: \n" + cnfe.toString());
+					err.open();
 				} catch(Exception e1) {e1.printStackTrace();};
 			}
 		});

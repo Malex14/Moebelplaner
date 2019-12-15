@@ -1,4 +1,4 @@
-package desinger;
+package designer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;

@@ -1,20 +1,20 @@
-package desinger;
+package designer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class ItemSchreibtisch extends Moebel {
+public class ItemrunderTisch extends Moebel{
 
-	public ItemSchreibtisch(Canvas c,String objName) {
+	public ItemrunderTisch(Canvas c,String objName) {
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;
 		x = 50;
 		y = 50;
-		width = 180;
-		height = 90;
-		image = SWTResourceManager.getImage(Gui.class, "/moebel/Schreibtisch.png");
+		width = 100;
+		height = 100;
+		image = SWTResourceManager.getImage(Gui.class, "/moebel/Tisch_rund.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
 	}

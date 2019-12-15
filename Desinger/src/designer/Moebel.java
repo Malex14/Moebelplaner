@@ -1,4 +1,4 @@
-package desinger;
+package designer;
 
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;

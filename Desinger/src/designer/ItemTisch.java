@@ -1,4 +1,4 @@
-package desinger;
+package designer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
