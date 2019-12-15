@@ -585,6 +585,50 @@ public class Gui {
 		});
 		formToolkit.adapt(btnSchreibtisch, true, true);
 		btnSchreibtisch.setText("Schreibtisch");
+		
+		Button btnHocker = new Button(grpMbel, SWT.NONE);
+		btnHocker.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemHocker(Gui.getCanvas(),dialog.getValue()));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnHocker, true, true);
+		btnHocker.setText("Hocker");
+		
+		Button btnSessel = new Button(grpMbel, SWT.NONE);
+		btnSessel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemSessel(Gui.getCanvas(),dialog.getValue()));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnSessel, true, true);
+		btnSessel.setText("Sessel");
 		fd_scale.left = new FormAttachment(0, 32);
 		
 		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
