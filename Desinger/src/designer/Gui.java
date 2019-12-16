@@ -63,8 +63,8 @@ public class Gui {
 	protected static Shell shlMbelplaner;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private static Canvas canvas;
-	private Text text;
-	private Text text_1;
+	private Text new_x;
+	private Text new_y;
 	private Tree tree;
 	private static TreeItem trtmMoebel;
 	private boolean drag = false;
@@ -85,6 +85,10 @@ public class Gui {
 	private int magWidth;
 	private double rotAngle;
 	private String currentTool = "universal";
+	private Text new_angle;
+	private Text new_name;
+	private Text new_height;
+	private Text new_width;
 	
 	/**
 	 * Launch the application.
@@ -198,7 +202,7 @@ public class Gui {
             			JSONObject jo = new JSONObject(ja.get(i).toString());
             			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {Gui.getCanvas(),jo.getString("name")}));
             			Moebel tmp = moebel.get(moebel.size()-1);
-            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight")); 
+            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"),jo.getFloat("scale")); 
             		}
             		hasStar = hasChanged = false;
             		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
@@ -475,7 +479,6 @@ public class Gui {
 		grpMbel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		
-		//TODO Nicht so viel doppelter code!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
 		
 		Button btnNewButton = new Button(grpMbel, SWT.NONE);
@@ -663,10 +666,10 @@ public class Gui {
 		
 		Group grpPosition = new Group(grpObjektobjektname, SWT.NONE);
 		FormData fd_grpPosition = new FormData();
-		fd_grpPosition.bottom = new FormAttachment(0, 79);
-		fd_grpPosition.right = new FormAttachment(0, 229);
-		fd_grpPosition.top = new FormAttachment(0, 5);
-		fd_grpPosition.left = new FormAttachment(0, 5);
+		fd_grpPosition.top = new FormAttachment(0, 10);
+		fd_grpPosition.right = new FormAttachment(100, -8);
+		fd_grpPosition.left = new FormAttachment(0, 10);
+		fd_grpPosition.bottom = new FormAttachment(0, 265);
 		grpPosition.setLayoutData(fd_grpPosition);
 		grpPosition.setText("Position");
 		formToolkit.adapt(grpPosition);
@@ -677,44 +680,76 @@ public class Gui {
 		formToolkit.adapt(lblX, true, true);
 		lblX.setText("X:");
 		
-		text = new Text(grpPosition, SWT.BORDER);
-		text.setBounds(26, 18, 188, 21);
-		formToolkit.adapt(text, true, true);
+		new_x = new Text(grpPosition, SWT.BORDER);
+		new_x.setBounds(26, 18, 188, 21);
+		formToolkit.adapt(new_x, true, true);
 		
-		text_1 = new Text(grpPosition, SWT.BORDER);
-		text_1.setBounds(26, 42, 188, 21);
-		formToolkit.adapt(text_1, true, true);
+		new_y = new Text(grpPosition, SWT.BORDER);
+		new_y.setBounds(26, 42, 188, 21);
+		formToolkit.adapt(new_y, true, true);
 		
 		Label lblY = new Label(grpPosition, SWT.NONE);
 		lblY.setText("Y:");
 		lblY.setBounds(10, 45, 10, 15);
 		formToolkit.adapt(lblY, true, true);
 		
+		new_angle = new Text(grpPosition, SWT.BORDER);
+		new_angle.setBounds(55, 69, 159, 21);
+		formToolkit.adapt(new_angle, true, true);
+		
+		Label lblWinkel = new Label(grpPosition, SWT.NONE);
+		lblWinkel.setText("Winkel:");
+		lblWinkel.setBounds(10, 72, 39, 15);
+		formToolkit.adapt(lblWinkel, true, true);
+		
+		new_name = new Text(grpPosition, SWT.BORDER);
+		new_name.setBounds(48, 96, 166, 21);
+		formToolkit.adapt(new_name, true, true);
+		
+		Label lblName = new Label(grpPosition, SWT.NONE);
+		lblName.setText("Name:");
+		lblName.setBounds(10, 99, 35, 15);
+		formToolkit.adapt(lblName, true, true);
+		
+		new_height = new Text(grpPosition, SWT.BORDER);
+		new_height.setBounds(48, 123, 166, 21);
+		formToolkit.adapt(new_height, true, true);
+		
+		Label lblHhe = new Label(grpPosition, SWT.NONE);
+		lblHhe.setText("H\u00F6he:");
+		lblHhe.setBounds(10, 126, 35, 15);
+		formToolkit.adapt(lblHhe, true, true);
+		
+		new_width = new Text(grpPosition, SWT.BORDER);
+		new_width.setBounds(48, 150, 166, 21);
+		formToolkit.adapt(new_width, true, true);
+		
+		Label lblBreite = new Label(grpPosition, SWT.NONE);
+		lblBreite.setText("Breite:");
+		lblBreite.setBounds(10, 153, 35, 15);
+		formToolkit.adapt(lblBreite, true, true);
+		
 		Button btnbernehmen = new Button(grpObjektobjektname, SWT.NONE);
+		btnbernehmen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			Moebel edit = null;
+			for (Moebel moebel2 : moebel) {
+				edit = moebel2;
+			}
+			if(edit != null) {
+				edit.setAll(new_x, new_y, new_width, new_height, new_angle, new_hasPaintListener, new_highlight);
+			}
+			}
+		});
+		
 		FormData fd_btnbernehmen = new FormData();
 		fd_btnbernehmen.right = new FormAttachment(100, -6);
 		fd_btnbernehmen.bottom = new FormAttachment(100, -6);
 		btnbernehmen.setLayoutData(fd_btnbernehmen);
-		btnbernehmen.setEnabled(false);
 		formToolkit.adapt(btnbernehmen, true, true);
 		btnbernehmen.setText("\u00DCbernehmen");
-		
-		Button btnAutomatischbernehmen = new Button(grpObjektobjektname, SWT.CHECK);
 		fd_btnbernehmen.left = new FormAttachment(0, 133);
-		FormData fd_btnAutomatischbernehmen = new FormData();
-		fd_btnAutomatischbernehmen.bottom = new FormAttachment(100, -10);
-		fd_btnAutomatischbernehmen.left = new FormAttachment(0, 6);
-		btnAutomatischbernehmen.setLayoutData(fd_btnAutomatischbernehmen);
-		btnAutomatischbernehmen.setSelection(true);
-		btnAutomatischbernehmen.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(btnAutomatischbernehmen.getSelection()) btnbernehmen.setEnabled(false);
-				else btnbernehmen.setEnabled(true);
-			}
-		});
-		formToolkit.adapt(btnAutomatischbernehmen, true, true);
-		btnAutomatischbernehmen.setText("auto \u00DCbernehmen");
 		
 		
 		
@@ -735,7 +770,7 @@ public class Gui {
 						gestureMoebel = null;
 					}
 					if(gestureMoebel != null && arg0.detail == SWT.GESTURE_MAGNIFY) {
-						gestureMoebel.setDimensions((int)(magWidth*arg0.magnification), (int)(magHeight*arg0.magnification));
+						gestureMoebel.setScale((float)(gestureMoebel.getScale()*(0.5*arg0.magnification)));
 					}
 				} catch(Exception e){}
 			}
@@ -954,7 +989,7 @@ public class Gui {
         			JSONObject jo = new JSONObject(ja.get(i).toString());
         			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {Gui.getCanvas(),jo.getString("name")}));
         			Moebel tmp = moebel.get(moebel.size()-1);
-        			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"));
+        			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"), jo.getFloat("scale"));
         		}
         		hasStar = hasChanged = false;
         		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);

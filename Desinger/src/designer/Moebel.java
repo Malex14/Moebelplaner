@@ -133,6 +133,7 @@ protected float scale = 1;
 		jo.put("angle", angle);
 		jo.put("hasPaintListener", hasPaintListener);
 		jo.put("highlight", highlight);
+		jo.put("scale", scale);
 		jo.put("type", getType());
 		return jo;
 	}
@@ -143,7 +144,7 @@ protected float scale = 1;
 		return type[1];
 	}
 	
-	public void setAll(int new_x,int new_y,int new_width,int new_height,int new_angle,boolean new_hasPaintListener,boolean new_highlight) {
+	public void setAll(int new_x,int new_y,int new_width,int new_height,int new_angle,boolean new_hasPaintListener,boolean new_highlight,float new_scale) {
 		x = new_x;
 		y = new_y;
 		width = new_width;
@@ -151,6 +152,7 @@ protected float scale = 1;
 		angle = new_angle;
 		hasPaintListener = new_hasPaintListener;
 		highlight = new_highlight;
+		scale=new_scale;
 		canvas.redraw();
 	}
 	
