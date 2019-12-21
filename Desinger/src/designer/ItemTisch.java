@@ -19,6 +19,4 @@ public class ItemTisch extends Moebel{
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
 	}
-	
-	
 }

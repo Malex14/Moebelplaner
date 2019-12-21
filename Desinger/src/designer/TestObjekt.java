@@ -20,6 +20,5 @@ public class TestObjekt extends Moebel{
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/testObjekt.png");
 		draw();
 		addToTree(Gui.gettrtmMoebel(),SWT.NONE);
-		
 	}	
 }

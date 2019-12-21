@@ -1,3 +1,8 @@
+/*
+ *	Möbelplaner - Malte Behrmann 2019
+ *	S1 Informatik Fr. Marinescu
+ */
+
 package designer;
 
 import java.awt.Rectangle;

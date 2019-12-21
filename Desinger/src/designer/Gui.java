@@ -1,3 +1,8 @@
+/*
+ *	Möbelplaner - Malte Behrmann 2019
+ *	S1 Informatik Fr. Marinescu
+ */
+
 package designer;
 
 import org.eclipse.swt.widgets.Display;
@@ -13,7 +18,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -30,7 +34,6 @@ import swing2swt.layout.FlowLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -55,7 +58,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 
 
-@SuppressWarnings("unused")
 public class Gui {
 	
 	private static Gui window;
@@ -77,9 +79,7 @@ public class Gui {
 	private String savepath;
 	private boolean hasChanged;
 	private boolean hasStar = false;
-	private Device device = Display.getCurrent();
 	private static String openPath;
-	private boolean gesture = false;
 	private int magHeight;
 	private int magWidth;
 	private double rotAngle;
@@ -481,8 +481,6 @@ public class Gui {
 		mntmEntfernen.setText("Entfernen\tEntf");
 		mntmEntfernen.setAccelerator(SWT.DEL);
 		
-		
-		
 		//ENDE MENÜLEISTE
 		
 		
@@ -522,10 +520,7 @@ public class Gui {
 		
 		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
 		
-		
-		Button btnCreateSchrank = formToolkit.createButton(grpMbel, "Schrank", SWT.NONE);
-		
-		
+
 		Button btnCreateTisch = formToolkit.createButton(grpMbel, "Tisch", SWT.NONE);
 		btnCreateTisch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -659,13 +654,77 @@ public class Gui {
 		});
 		formToolkit.adapt(btnSessel, true, true);
 		btnSessel.setText("Sessel");
+		
+		Button btnSofa = new Button(grpMbel, SWT.NONE);
+		btnSofa.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemSofa(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnSofa, true, true);
+		btnSofa.setText("Sofa");
+		
+		Button btnSideboard = new Button(grpMbel, SWT.NONE);
+		btnSideboard.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemSideboard(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnSideboard, true, true);
+		btnSideboard.setText("Sideboard");
+		
+		Button btnBett = new Button(grpMbel, SWT.NONE);
+		formToolkit.adapt(btnBett, true, true);
+		btnBett.setText("Bett");
+		
+		Button btnSchrankelement = new Button(grpMbel, SWT.NONE);
+		formToolkit.adapt(btnSchrankelement, true, true);
+		btnSchrankelement.setText("Schrankelement");
+		
+		Button btnNachttisch = new Button(grpMbel, SWT.NONE);
+		formToolkit.adapt(btnNachttisch, true, true);
+		btnNachttisch.setText("Nachttisch");
+		
+		Button btnDoppelbett = new Button(grpMbel, SWT.NONE);
+		formToolkit.adapt(btnDoppelbett, true, true);
+		btnDoppelbett.setText("Doppelbett");
+		
+		Button btnBadewanne = new Button(grpMbel, SWT.NONE);
+		formToolkit.adapt(btnBadewanne, true, true);
+		btnBadewanne.setText("Badewanne");
 		fd_scale.left = new FormAttachment(0, 32);
 		
-		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
-		tbtmNewItem.setText("Objekte");
+		TabItem tbtmObjekte = new TabItem(tabFolder, SWT.NONE);
+		tbtmObjekte.setText("Objekte");
 		
 		tree = new Tree(tabFolder, SWT.BORDER);
-		tbtmNewItem.setControl(tree);
+		tbtmObjekte.setControl(tree);
 		formToolkit.paintBordersFor(tree);
 		
 		trtmMoebel = new TreeItem(tree, SWT.NONE);
@@ -694,10 +753,9 @@ public class Gui {
 		
 		Group grpPosition = new Group(grpObjektobjektname, SWT.NONE);
 		FormData fd_grpPosition = new FormData();
-		fd_grpPosition.top = new FormAttachment(0, 10);
-		fd_grpPosition.right = new FormAttachment(100, -8);
-		fd_grpPosition.left = new FormAttachment(0, 10);
-		fd_grpPosition.bottom = new FormAttachment(0, 195);
+		fd_grpPosition.top = new FormAttachment(0);
+		fd_grpPosition.left = new FormAttachment(0);
+		fd_grpPosition.bottom = new FormAttachment(0, 185);
 		grpPosition.setLayoutData(fd_grpPosition);
 		grpPosition.setText("Position");
 		formToolkit.adapt(grpPosition);
@@ -722,11 +780,11 @@ public class Gui {
 				}
 			}
 		});
-		new_x.setBounds(26, 48, 188, 21);
+		new_x.setBounds(26, 48, 194, 21);
 		formToolkit.adapt(new_x, true, true);
 		
 		new_y = new Text(grpPosition, SWT.BORDER);
-		new_y.setBounds(26, 75, 188, 21);
+		new_y.setBounds(26, 75, 194, 21);
 		formToolkit.adapt(new_y, true, true);
 		
 		Label lblY = new Label(grpPosition, SWT.NONE);
@@ -735,7 +793,7 @@ public class Gui {
 		formToolkit.adapt(lblY, true, true);
 		
 		new_angle = new Text(grpPosition, SWT.BORDER);
-		new_angle.setBounds(55, 156, 159, 21);
+		new_angle.setBounds(55, 156, 165, 21);
 		formToolkit.adapt(new_angle, true, true);
 		
 		Label lblWinkel = new Label(grpPosition, SWT.NONE);
@@ -757,7 +815,7 @@ public class Gui {
 				}
 			}
 		});
-		new_name.setBounds(48, 21, 166, 21);
+		new_name.setBounds(48, 21, 172, 21);
 		formToolkit.adapt(new_name, true, true);
 		
 		Label lblName = new Label(grpPosition, SWT.NONE);
@@ -766,7 +824,7 @@ public class Gui {
 		formToolkit.adapt(lblName, true, true);
 		
 		new_height = new Text(grpPosition, SWT.BORDER);
-		new_height.setBounds(48, 102, 166, 21);
+		new_height.setBounds(48, 102, 172, 21);
 		formToolkit.adapt(new_height, true, true);
 		
 		Label lblHhe = new Label(grpPosition, SWT.NONE);
@@ -775,7 +833,7 @@ public class Gui {
 		formToolkit.adapt(lblHhe, true, true);
 		
 		new_width = new Text(grpPosition, SWT.BORDER);
-		new_width.setBounds(48, 129, 166, 21);
+		new_width.setBounds(48, 129, 172, 21);
 		formToolkit.adapt(new_width, true, true);
 		
 		Label lblBreite = new Label(grpPosition, SWT.NONE);
@@ -784,7 +842,8 @@ public class Gui {
 		formToolkit.adapt(lblBreite, true, true);
 		
 		Button btnbernehmen = new Button(grpObjektobjektname, SWT.NONE);
-		btnbernehmen.setEnabled(false);
+		fd_grpPosition.right = new FormAttachment(btnbernehmen, 0, SWT.RIGHT);
+		btnbernehmen.setEnabled(true);
 		btnbernehmen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -805,28 +864,6 @@ public class Gui {
 			}
 			}
 		});
-		
-		btnAutomatischbernehmen = new Button(grpObjektobjektname, SWT.CHECK);
-		FormData fd_btnAutomatischbernehmen = new FormData();
-		fd_btnAutomatischbernehmen.top = new FormAttachment(btnbernehmen, 4, SWT.TOP);
-		fd_btnAutomatischbernehmen.left = new FormAttachment(grpPosition, 0, SWT.LEFT);
-		btnAutomatischbernehmen.setLayoutData(fd_btnAutomatischbernehmen);
-		btnAutomatischbernehmen.setSelection(true);
-		btnAutomatischbernehmen.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(btnAutomatischbernehmen.getSelection()) btnbernehmen.setEnabled(false);
-				else btnbernehmen.setEnabled(true);
-			}
-		});
-		btnAutomatischbernehmen.setBounds(10, 456, 117, 25);
-		formToolkit.adapt(btnAutomatischbernehmen, true, true);
-		btnAutomatischbernehmen.setText("auto \u00DCbernehmen");
-		
-		
-		btnAutomatischbernehmen.setVisible(false);
-		btnAutomatischbernehmen.setSelection(false);
-		btnbernehmen.setEnabled(true);
 		
 		
 		FormData fd_btnbernehmen = new FormData();
@@ -1007,8 +1044,6 @@ public class Gui {
 		
 		
 		fd_tabFolder.right = new FormAttachment(canvas, -6);
-		
-		ComboBoxCellEditor tableColumn = new ComboBoxCellEditor();
 
 		FormData fd_canvas = new FormData();
 		fd_canvas.bottom = new FormAttachment(100);
@@ -1066,6 +1101,9 @@ public class Gui {
 		      }
 		});
 		
+		
+		//öffenen einer Datei, die als 1. Parameter übergeben wurde
+		
 		if(openPath != null) {
 			try {
 				savepath = openPath;
@@ -1092,6 +1130,9 @@ public class Gui {
 			} catch(Exception e1) {};
 		}
 	}
+	
+	
+	//Getter & Setter
 	
 	public Canvas getCanvas() {
 		return canvas;
@@ -1163,6 +1204,11 @@ public class Gui {
 	public Group getGrpObjektobjektname() {
 		return grpObjektobjektname;
 	}
+	
+	
+	
+	//Dateispeicherung
+	
 	private boolean save() {
 		try {
 			JSONArray ja = new JSONArray(); 
