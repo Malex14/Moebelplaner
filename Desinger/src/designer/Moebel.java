@@ -4,6 +4,8 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -33,9 +35,27 @@ protected TreeItem trtm;
 protected String name;
 protected boolean hasPaintListener = false;
 protected boolean highlight = false;
-protected float scale = 1;
+protected float xScale = 1;
+protected float yScale = 1;
+protected Gui Gui;
+
 	
 
+	public int getOrigWidth() {
+		return origWidth;
+	}
+
+	public void setOrigWidth(int origWidth) {
+		this.origWidth = origWidth;
+	}
+
+	public int getOrigHeight() {
+		return origHeight;
+	}
+
+	public void setOrigHeight(int origHeight) {
+		this.origHeight = origHeight;
+	}
 
 	public void setPosition(int new_x, int new_y) {
 		setX(new_x);
@@ -107,15 +127,25 @@ protected float scale = 1;
 		return name;
 	}
 
-	public float getScale() {
-		return scale;
+	public float getxScale() {
+		return xScale;
 	}
 
-	public void setScale(float scale) {
-		this.scale = scale;
-		width = (int)(origWidth * this.scale);
-		height = (int)(origHeight * this.scale);
+	public void setxScale(float xScale) {
+		this.xScale = xScale;
+		width = (int)(origWidth * this.xScale);
+		
+		canvas.redraw();
+	}
 
+	public float getyScale() {
+		return yScale;
+	}
+
+	public void setyScale(float yScale) {
+		this.yScale = yScale;
+		height = (int)(origHeight * this.yScale);
+		
 		canvas.redraw();
 	}
 
@@ -130,10 +160,13 @@ protected float scale = 1;
 		jo.put("y", y);
 		jo.put("width", width);
 		jo.put("height", height);
+		jo.put("origWidth", origWidth);
+		jo.put("origHeight", origHeight);
 		jo.put("angle", angle);
 		jo.put("hasPaintListener", hasPaintListener);
 		jo.put("highlight", highlight);
-		jo.put("scale", scale);
+		jo.put("xScale", xScale);
+		jo.put("yScale", yScale);
 		jo.put("type", getType());
 		return jo;
 	}
@@ -144,18 +177,28 @@ protected float scale = 1;
 		return type[1];
 	}
 	
-	public void setAll(int new_x,int new_y,int new_width,int new_height,int new_angle,boolean new_hasPaintListener,boolean new_highlight,float new_scale) {
+	public void setAll(int new_x,int new_y,int new_width,int new_height,int new_origWidth,int new_origHeight,float new_angle,boolean new_hasPaintListener,boolean new_highlight,float new_xScale, float new_yScale) {
 		x = new_x;
 		y = new_y;
 		width = new_width;
 		height = new_height;
+		origWidth = new_origWidth;
+		origHeight = new_origHeight;
 		angle = new_angle;
 		hasPaintListener = new_hasPaintListener;
 		highlight = new_highlight;
-		scale=new_scale;
+		xScale=new_xScale;
+		yScale=new_yScale;
 		canvas.redraw();
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+		removeFromTree();
+		addToTree(Gui.gettrtmMoebel(), SWT.NONE);
+		Gui.getGrpObjektobjektname().setText("Objekt: " + name);
+	}
+
 	public boolean hasPaintListener() {
 		return hasPaintListener;
 	}
@@ -180,6 +223,9 @@ protected float scale = 1;
 						e.gc.drawLine(0, 0, width, height);
 						e.gc.drawLine(0, height, width, 0);
 						e.gc.drawRectangle(0, 0, width, height);
+						
+						info();
+						
 				}
 				 transform.dispose();
 				 hasPaintListener = true;
@@ -237,5 +283,15 @@ protected float scale = 1;
 	
 	public boolean isHighlighted() {
 		return highlight;
+	}
+	
+
+	private void info() {
+		Gui.getNew_x().setText(String.valueOf(x));
+		Gui.getNew_y().setText(String.valueOf(y));
+		Gui.getNew_height().setText(String.valueOf(height));
+		Gui.getNew_width().setText(String.valueOf(width));
+		Gui.getNew_angle().setText(String.valueOf(angle));
+		Gui.getNew_name().setText(name);
 	}
 }

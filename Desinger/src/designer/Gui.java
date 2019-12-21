@@ -37,12 +37,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.DragDetectEvent;
 import org.eclipse.swt.widgets.Label;
@@ -55,18 +51,21 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.GestureEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 
 @SuppressWarnings("unused")
 public class Gui {
-
+	
+	private static Gui window;
 	protected static Shell shlMbelplaner;
 	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
-	private static Canvas canvas;
+	private Canvas canvas;
 	private Text new_x;
 	private Text new_y;
 	private Tree tree;
-	private static TreeItem trtmMoebel;
+	private TreeItem trtmMoebel;
 	private boolean drag = false;
 	private boolean mouseDown = false;
 	private Moebel dragMoebel;
@@ -76,8 +75,8 @@ public class Gui {
 	private Float start_mouse;
 	private ArrayList<Moebel> moebel = new ArrayList<>();
 	private String savepath;
-	private static boolean hasChanged;
-	private static boolean hasStar = false;
+	private boolean hasChanged;
+	private boolean hasStar = false;
 	private Device device = Display.getCurrent();
 	private static String openPath;
 	private boolean gesture = false;
@@ -89,6 +88,8 @@ public class Gui {
 	private Text new_name;
 	private Text new_height;
 	private Text new_width;
+	private Group grpObjektobjektname;
+	private Button btnAutomatischbernehmen;
 	
 	/**
 	 * Launch the application.
@@ -99,7 +100,7 @@ public class Gui {
 			openPath = args.length > 0 ? args[0] : null;
 		} catch (Exception e) {e.printStackTrace();}
 		try {
-			Gui window = new Gui();
+			window = new Gui();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,6 +132,7 @@ public class Gui {
 	 */
 	protected void createContents() {
 		
+		//SHELL ERZEUGEN
 		
 		shlMbelplaner = new Shell();
 		shlMbelplaner.setMinimumSize(new Point(500, 300));
@@ -138,9 +140,18 @@ public class Gui {
 		shlMbelplaner.setSize(899, 576);
 		shlMbelplaner.setLayout(new FormLayout());
 		
+		
+		
+		
+		//MENÜLEISTE
+		
 		Menu menu = new Menu(shlMbelplaner, SWT.BAR);
 		shlMbelplaner.setMenuBar(menu);
 		shlMbelplaner.setImages(new Image[] {SWTResourceManager.getImage(Gui.class, "/icons/icon32.png"),SWTResourceManager.getImage(Gui.class, "/icons/icon512.png")});
+		
+		
+		
+		//DATEI-MENÜ
 		
 		MenuItem mntmDatei = new MenuItem(menu, SWT.CASCADE);
 		mntmDatei.setText("Datei");
@@ -148,7 +159,6 @@ public class Gui {
 		Menu menu_1 = new Menu(mntmDatei);
 		mntmDatei.setMenu(menu_1);
 		
-
 		
 		//NEU
 		
@@ -161,7 +171,7 @@ public class Gui {
 				msg.setMessage("Die aktuelle Datei ist nicht leer. Soll sie verworfen werden?");
 				if(moebel.isEmpty() || msg.open() == SWT.YES) {
 				for (Moebel moebel : moebel) {
-        			moebel.hide(Gui.getCanvas());
+        			moebel.hide(getCanvas());
         		}
         		moebel = new ArrayList<Moebel>();
 				}
@@ -195,24 +205,23 @@ public class Gui {
             		if(moebel.isEmpty() || msg.open() == SWT.YES) {
             		JSONArray ja = new JSONArray(jsonIn);
             		for (Moebel moebel : moebel) {
-            			moebel.hide(Gui.getCanvas());
+            			moebel.hide(getCanvas());
             		}
             		moebel = new ArrayList<Moebel>();
             		for (int i = 0; i < ja.length(); i++) {
             			JSONObject jo = new JSONObject(ja.get(i).toString());
-            			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {Gui.getCanvas(),jo.getString("name")}));
+            			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {getCanvas(),jo.getString("name")}));
             			Moebel tmp = moebel.get(moebel.size()-1);
-            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"),jo.getFloat("scale")); 
+            			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("origWidth"), jo.getInt("origHeight") , jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"), jo.getFloat("xScale"), jo.getFloat("yScale")); 
             		}
             		hasStar = hasChanged = false;
             		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
 					}
-				}catch (ClassNotFoundException cnfe) {
-					MessageBox err = new MessageBox(shlMbelplaner, SWT.OK | SWT.ICON_ERROR);
+				}catch(Exception e1) {MessageBox err = new MessageBox(shlMbelplaner, SWT.OK | SWT.ICON_ERROR);
 					err.setText("Error");
-					err.setMessage("Dateilesefehler: \n" + cnfe.toString());
+					err.setMessage("Dateilesefehler: \n" + e1.toString());
 					err.open();
-				} catch(Exception e1) {e1.printStackTrace();};
+				};
 			}
 		});
 		mntmOeffnen.setText("\u00D6ffnen...\tStrg+O");
@@ -264,13 +273,13 @@ public class Gui {
 		mntmSpeichernUnter.setText("Speichern unter...\tStrg+Umschalt+S");
 		mntmSpeichernUnter.setAccelerator(SWT.CONTROL+SWT.SHIFT+'s');
 		
-		//EXPORTIEREN
+		//EXPORTIEREN 
 		
 		MenuItem mntmExportieren = new MenuItem(menu_1, SWT.NONE);
 		mntmExportieren.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Export export = new Export(shlMbelplaner);
+				Export export = new Export(shlMbelplaner,window);
 				if (export.open()==0) {
 					if (export.getBtnAbsolut()==true) {
 						try {
@@ -347,6 +356,9 @@ public class Gui {
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
+		
+		//BEENDEN
+		
 		MenuItem mntmBeenden = new MenuItem(menu_1, SWT.NONE);
 		mntmBeenden.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -357,11 +369,18 @@ public class Gui {
 		mntmBeenden.setText("Beenden\tStrg+Q");
 		mntmBeenden.setAccelerator(SWT.CONTROL+'q');
 		
+	
+		
+		//WERKZEUGE-MENÜ
+		
 		MenuItem mntmWerkzeuge = new MenuItem(menu, SWT.CASCADE);
 		mntmWerkzeuge.setText("Werkzeuge");
 		
 		Menu menu_2 = new Menu(mntmWerkzeuge);
 		mntmWerkzeuge.setMenu(menu_2);
+		
+		
+		//UNIVERSALWERKZEUG
 		
 		MenuItem mntmUniversalwerkzeug = new MenuItem(menu_2, SWT.RADIO);
 		mntmUniversalwerkzeug.addSelectionListener(new SelectionAdapter() {
@@ -373,8 +392,8 @@ public class Gui {
 		mntmUniversalwerkzeug.setSelection(true);
 		mntmUniversalwerkzeug.setText("Universalwerkzeug");
 		
-		MenuItem mntmEinfgenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
-		mntmEinfgenWerkzeug.setText("Einf\u00FCgen Werkzeug");
+		
+		//ENTFERNENWERKZEUG
 		
 		MenuItem mntmEntfernenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
 		mntmEntfernenWerkzeug.addSelectionListener(new SelectionAdapter() {
@@ -385,8 +404,9 @@ public class Gui {
 		});
 		mntmEntfernenWerkzeug.setText("Entfernen Werkzeug");
 		
-		MenuItem mntmGrenWerkzeug = new MenuItem(menu_2, SWT.RADIO);
-		mntmGrenWerkzeug.setText("Gr\u00F6\u00DFen Werkzeug");
+		
+		
+		//MÖEBEL-MENÜ
 		
 		MenuItem mntmMbel = new MenuItem(menu, SWT.CASCADE);
 		mntmMbel.setText("M\u00F6bel");
@@ -394,17 +414,27 @@ public class Gui {
 		Menu menu_3 = new Menu(mntmMbel);
 		mntmMbel.setMenu(menu_3);
 		
+		
+		//VERGRÖSSERN
+		
 		MenuItem mntmVergoessern = new MenuItem(menu_3, SWT.NONE);
 		mntmVergoessern.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null) tmp.setScale(tmp.getScale()+0.05F);;
+				if (tmp != null) {
+					float ratio = tmp.getyScale()/tmp.getxScale();
+					tmp.setxScale(tmp.getxScale()+0.05F);
+					tmp.setyScale(tmp.getxScale()*ratio);
+				}
 			}
 		});
 		mntmVergoessern.setText("Vergr\u00F6\u00DFern\tStrg++");
 		mntmVergoessern.setAccelerator(SWT.CONTROL+'+');
+		
+		
+		//VERKLEINERN
 		
 		MenuItem mntmVerkleinern = new MenuItem(menu_3, SWT.NONE);
 		mntmVerkleinern.addSelectionListener(new SelectionAdapter() {
@@ -412,13 +442,20 @@ public class Gui {
 			public void widgetSelected(SelectionEvent e) {
 				Moebel tmp = null;
 				for (Moebel moebel2 : moebel) if (moebel2.isHighlighted()) tmp = moebel2;
-				if (tmp != null && ((tmp.getWidth() > 5) || (tmp.getHeight() > 5))) tmp.setScale(tmp.getScale()-0.05F);;
+				if (tmp != null && ((tmp.getWidth() > 5) || (tmp.getHeight() > 5))) {
+					float ratio = tmp.getyScale()/tmp.getxScale();
+					tmp.setxScale(tmp.getxScale()-0.05F);
+					tmp.setyScale(tmp.getxScale()*ratio);
+				}
 			}
 		});
 		mntmVerkleinern.setText("Verkleinern\tStrg+-");
 		mntmVerkleinern.setAccelerator(SWT.CONTROL+'-');
 		
 		new MenuItem(menu_3, SWT.SEPARATOR);
+		
+		
+		//ENTFERNEN
 		
 		MenuItem mntmEntfernen = new MenuItem(menu_3, SWT.NONE);
 		mntmEntfernen.addSelectionListener(new SelectionAdapter() {
@@ -430,6 +467,13 @@ public class Gui {
 					if(itrMoebel.isHighlighted()) {
 						itrMoebel.hide(getCanvas());
 						itr.remove();
+						new_angle.setText("");
+						new_x.setText("");
+						new_y.setText("");
+						new_width.setText("");
+						new_height.setText("");
+						new_name.setText("");
+						grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
 					}
 				}
 			}
@@ -437,17 +481,14 @@ public class Gui {
 		mntmEntfernen.setText("Entfernen\tEntf");
 		mntmEntfernen.setAccelerator(SWT.DEL);
 		
-		MenuItem mntmLetztesMbelLoschen = new MenuItem(menu_3, SWT.NONE);
-		mntmLetztesMbelLoschen.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					moebel.get(moebel.size()-1).hide(getCanvas());
-					moebel.remove(moebel.size()-1);
-					}catch(Exception e1) {}
-			}
-		});
-		mntmLetztesMbelLoschen.setText("letztes M\u00F6bel loschen");
+		
+		
+		//ENDE MENÜLEISTE
+		
+		
+		
+		
+		//SEITENLEISTE
 		
 		TabFolder tabFolder = new TabFolder(shlMbelplaner, SWT.NONE);
 		FormData fd_tabFolder = new FormData();
@@ -481,19 +522,6 @@ public class Gui {
 		
 		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
 		
-		Button btnNewButton = new Button(grpMbel, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-				moebel.get(moebel.size()-1).hide(getCanvas());
-				moebel.remove(moebel.size()-1);
-				}catch(Exception e1) {}
-			}
-		});
-		formToolkit.adapt(btnNewButton, true, true);
-		btnNewButton.setText("Letztes Objekt l\u00F6schen");
-		
 		
 		Button btnCreateSchrank = formToolkit.createButton(grpMbel, "Schrank", SWT.NONE);
 		
@@ -512,7 +540,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemTisch(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new ItemTisch(getCanvas(),dialog.getValue(),window));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -536,7 +564,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemrunderTisch(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new ItemrunderTisch(getCanvas(),dialog.getValue(),window));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -558,7 +586,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemWaschmaschine(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new ItemWaschmaschine(getCanvas(),dialog.getValue(), window));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -580,7 +608,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemSchreibtisch(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new ItemSchreibtisch(getCanvas(),dialog.getValue(), window));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -602,7 +630,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemHocker(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new ItemHocker(getCanvas(),dialog.getValue(), window));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -624,7 +652,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemSessel(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new ItemSessel(getCanvas(),dialog.getValue(), window));
 					moebel.get(moebel.size()-1).testMethode();
 				}
 			}
@@ -652,7 +680,7 @@ public class Gui {
 		formToolkit.paintBordersFor(composite_1);
 		composite_1.setLayout(new FormLayout());
 		
-		Group grpObjektobjektname = new Group(composite_1, SWT.NONE);
+		grpObjektobjektname = new Group(composite_1, SWT.NONE);
 		grpObjektobjektname.setLayout(new FormLayout());
 		FormData fd_grpObjektobjektname = new FormData();
 		fd_grpObjektobjektname.right = new FormAttachment(100);
@@ -669,79 +697,137 @@ public class Gui {
 		fd_grpPosition.top = new FormAttachment(0, 10);
 		fd_grpPosition.right = new FormAttachment(100, -8);
 		fd_grpPosition.left = new FormAttachment(0, 10);
-		fd_grpPosition.bottom = new FormAttachment(0, 265);
+		fd_grpPosition.bottom = new FormAttachment(0, 195);
 		grpPosition.setLayoutData(fd_grpPosition);
 		grpPosition.setText("Position");
 		formToolkit.adapt(grpPosition);
 		formToolkit.paintBordersFor(grpPosition);
 		
 		Label lblX = new Label(grpPosition, SWT.NONE);
-		lblX.setBounds(10, 21, 10, 15);
+		lblX.setBounds(10, 51, 10, 15);
 		formToolkit.adapt(lblX, true, true);
 		lblX.setText("X:");
 		
 		new_x = new Text(grpPosition, SWT.BORDER);
-		new_x.setBounds(26, 18, 188, 21);
+		new_x.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent arg0) {
+				if(btnAutomatischbernehmen.getSelection()) {
+					for (Moebel moebel2 : moebel) {
+						if(moebel2.isHighlighted()) {
+							try {
+							moebel2.setX(Integer.parseInt(new_x.getText()));
+							}catch (NumberFormatException e) {}
+						}
+					}
+				}
+			}
+		});
+		new_x.setBounds(26, 48, 188, 21);
 		formToolkit.adapt(new_x, true, true);
 		
 		new_y = new Text(grpPosition, SWT.BORDER);
-		new_y.setBounds(26, 42, 188, 21);
+		new_y.setBounds(26, 75, 188, 21);
 		formToolkit.adapt(new_y, true, true);
 		
 		Label lblY = new Label(grpPosition, SWT.NONE);
 		lblY.setText("Y:");
-		lblY.setBounds(10, 45, 10, 15);
+		lblY.setBounds(10, 78, 10, 15);
 		formToolkit.adapt(lblY, true, true);
 		
 		new_angle = new Text(grpPosition, SWT.BORDER);
-		new_angle.setBounds(55, 69, 159, 21);
+		new_angle.setBounds(55, 156, 159, 21);
 		formToolkit.adapt(new_angle, true, true);
 		
 		Label lblWinkel = new Label(grpPosition, SWT.NONE);
 		lblWinkel.setText("Winkel:");
-		lblWinkel.setBounds(10, 72, 39, 15);
+		lblWinkel.setBounds(10, 159, 39, 15);
 		formToolkit.adapt(lblWinkel, true, true);
 		
 		new_name = new Text(grpPosition, SWT.BORDER);
-		new_name.setBounds(48, 96, 166, 21);
+		new_name.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent arg0) {
+				if(btnAutomatischbernehmen.getSelection()) {
+					for (Moebel moebel2 : moebel) {
+						if(moebel2.isHighlighted()) {
+							grpObjektobjektname.setText("Objekt: " + new_name.getText());
+							moebel2.setName(new_name.getText());
+						}
+						
+					}
+				}
+			}
+		});
+		new_name.setBounds(48, 21, 166, 21);
 		formToolkit.adapt(new_name, true, true);
 		
 		Label lblName = new Label(grpPosition, SWT.NONE);
 		lblName.setText("Name:");
-		lblName.setBounds(10, 99, 35, 15);
+		lblName.setBounds(10, 24, 35, 15);
 		formToolkit.adapt(lblName, true, true);
 		
 		new_height = new Text(grpPosition, SWT.BORDER);
-		new_height.setBounds(48, 123, 166, 21);
+		new_height.setBounds(48, 102, 166, 21);
 		formToolkit.adapt(new_height, true, true);
 		
 		Label lblHhe = new Label(grpPosition, SWT.NONE);
 		lblHhe.setText("H\u00F6he:");
-		lblHhe.setBounds(10, 126, 35, 15);
+		lblHhe.setBounds(10, 105, 35, 15);
 		formToolkit.adapt(lblHhe, true, true);
 		
 		new_width = new Text(grpPosition, SWT.BORDER);
-		new_width.setBounds(48, 150, 166, 21);
+		new_width.setBounds(48, 129, 166, 21);
 		formToolkit.adapt(new_width, true, true);
 		
 		Label lblBreite = new Label(grpPosition, SWT.NONE);
 		lblBreite.setText("Breite:");
-		lblBreite.setBounds(10, 153, 35, 15);
+		lblBreite.setBounds(10, 132, 35, 15);
 		formToolkit.adapt(lblBreite, true, true);
 		
 		Button btnbernehmen = new Button(grpObjektobjektname, SWT.NONE);
+		btnbernehmen.setEnabled(false);
 		btnbernehmen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			Moebel edit = null;
 			for (Moebel moebel2 : moebel) {
-				edit = moebel2;
+				if(moebel2.isHighlighted()) edit = moebel2;
 			}
 			if(edit != null) {
-				edit.setAll(new_x, new_y, new_width, new_height, new_angle, new_hasPaintListener, new_highlight);
+				try {
+				edit.setAll(Integer.parseInt(new_x.getText()), Integer.parseInt(new_y.getText()), Integer.parseInt(new_width.getText()), Integer.parseInt(new_height.getText()), edit.getOrigWidth(), edit.getOrigHeight(), Float.parseFloat(new_angle.getText()), edit.hasPaintListener(), edit.isHighlighted(),(Integer.parseInt(new_width.getText())/edit.origWidth),(Integer.parseInt(new_height.getText())/edit.origHeight));
+				edit.setName(new_name.getText());
+				}catch (NumberFormatException e1) {
+					MessageBox err = new MessageBox(shlMbelplaner, SWT.OK | SWT.ICON_ERROR);
+					err.setText("Error");
+					err.setMessage("Zahl hat falsches format: \n" + e1.toString());
+					err.open();
+				}
 			}
 			}
 		});
+		
+		btnAutomatischbernehmen = new Button(grpObjektobjektname, SWT.CHECK);
+		FormData fd_btnAutomatischbernehmen = new FormData();
+		fd_btnAutomatischbernehmen.top = new FormAttachment(btnbernehmen, 4, SWT.TOP);
+		fd_btnAutomatischbernehmen.left = new FormAttachment(grpPosition, 0, SWT.LEFT);
+		btnAutomatischbernehmen.setLayoutData(fd_btnAutomatischbernehmen);
+		btnAutomatischbernehmen.setSelection(true);
+		btnAutomatischbernehmen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnAutomatischbernehmen.getSelection()) btnbernehmen.setEnabled(false);
+				else btnbernehmen.setEnabled(true);
+			}
+		});
+		btnAutomatischbernehmen.setBounds(10, 456, 117, 25);
+		formToolkit.adapt(btnAutomatischbernehmen, true, true);
+		btnAutomatischbernehmen.setText("auto \u00DCbernehmen");
+		
+		
+		btnAutomatischbernehmen.setVisible(false);
+		btnAutomatischbernehmen.setSelection(false);
+		btnbernehmen.setEnabled(true);
+		
 		
 		FormData fd_btnbernehmen = new FormData();
 		fd_btnbernehmen.right = new FormAttachment(100, -6);
@@ -770,7 +856,8 @@ public class Gui {
 						gestureMoebel = null;
 					}
 					if(gestureMoebel != null && arg0.detail == SWT.GESTURE_MAGNIFY) {
-						gestureMoebel.setScale((float)(gestureMoebel.getScale()*(0.5*arg0.magnification)));
+						gestureMoebel.setxScale((float)((magWidth*arg0.magnification)/gestureMoebel.getOrigWidth()));
+						gestureMoebel.setyScale((float)((magHeight*arg0.magnification)/gestureMoebel.getOrigHeight()));
 					}
 				} catch(Exception e){}
 			}
@@ -873,7 +960,15 @@ public class Gui {
 						moebel.remove(tmp_moebel); moebel.add(tmp_moebel);
 						tmp_moebel.setHighlight(true);
 						grpObjektobjektname.setText("Objekt: " + tmp_moebel.getName());
-					} else grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
+					} else {
+						new_angle.setText("");
+						new_x.setText("");
+						new_y.setText("");
+						new_width.setText("");
+						new_height.setText("");
+						new_name.setText("");
+						grpObjektobjektname.setText("Objekt: Kein Objekt ausgewählt");
+					}
 					break;
 
 				default:
@@ -938,7 +1033,7 @@ public class Gui {
 				});
 				dialog.open();
 				if(dialog.getReturnCode() == 0) {
-					moebel.add(new TestObjekt(Gui.getCanvas(),dialog.getValue()));
+					moebel.add(new TestObjekt(getCanvas(),dialog.getValue(), window));
 					moebel.get(moebel.size()-1).testMethode();
 					
 				}
@@ -982,14 +1077,14 @@ public class Gui {
         		
         		JSONArray ja = new JSONArray(jsonIn);
         		for (Moebel moebel : moebel) {
-        			moebel.hide(Gui.getCanvas());
+        			moebel.hide(getCanvas());
         		}
         		moebel = new ArrayList<Moebel>();
         		for (int i = 0; i < ja.length(); i++) {
         			JSONObject jo = new JSONObject(ja.get(i).toString());
-        			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {Gui.getCanvas(),jo.getString("name")}));
+        			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {getCanvas(),jo.getString("name")}));
         			Moebel tmp = moebel.get(moebel.size()-1);
-        			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"), jo.getFloat("scale"));
+        			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("origWidth"), jo.getInt("origHeight") , jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"), jo.getFloat("scale"), jo.getFloat("yScale"));
         		}
         		hasStar = hasChanged = false;
         		shlMbelplaner.setText("M\u00F6belplaner - " + savepath);
@@ -998,24 +1093,75 @@ public class Gui {
 		}
 	}
 	
-	public static Canvas getCanvas() {
+	public Canvas getCanvas() {
 		return canvas;
 	}
 	public Tree getTree() {
 		return tree;
 	}
-	public static TreeItem gettrtmMoebel() {
+	public TreeItem gettrtmMoebel() {
 		return trtmMoebel;
 	}
 	public Shell getShell() {
 		return shlMbelplaner;
 	}
-	public static void sethasChanged(boolean changed) {
+	public void sethasChanged(boolean changed) {
 		hasChanged = changed;
 		if(changed && !hasStar ) {
 			shlMbelplaner.setText(shlMbelplaner.getText()+"*");
 			hasStar = true;
 		}
+	}
+	public Text getNew_x() {
+		return new_x;
+	}
+
+	public void setNew_x(Text new_x) {
+		this.new_x = new_x;
+	}
+
+	public Text getNew_y() {
+		return new_y;
+	}
+
+	public void setNew_y(Text new_y) {
+		this.new_y = new_y;
+	}
+
+	public Text getNew_angle() {
+		return new_angle;
+	}
+
+	public void setNew_angle(Text new_angle) {
+		this.new_angle = new_angle;
+	}
+
+	public Text getNew_name() {
+		return new_name;
+	}
+
+	public void setNew_name(Text new_name) {
+		this.new_name = new_name;
+	}
+
+	public Text getNew_height() {
+		return new_height;
+	}
+
+	public void setNew_height(Text new_height) {
+		this.new_height = new_height;
+	}
+
+	public Text getNew_width() {
+		return new_width;
+	}
+
+	public void setNew_width(Text new_width) {
+		this.new_width = new_width;
+	}
+	
+	public Group getGrpObjektobjektname() {
+		return grpObjektobjektname;
 	}
 	private boolean save() {
 		try {

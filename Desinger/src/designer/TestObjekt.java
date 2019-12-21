@@ -6,7 +6,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class TestObjekt extends Moebel{
 	
-	public TestObjekt(Canvas c,String objName) {
+	public TestObjekt(Canvas c,String objName, Gui Gui) {
+		this.Gui = Gui;
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;

@@ -21,9 +21,12 @@ public class Export extends Dialog{
 	private int width;
 	private int height;
 	private boolean abs;
-
-	protected Export(Shell parentShell) {
+	private Gui Gui;
+	private float ratio;
+	
+	protected Export(Shell parentShell,Gui Gui) {
 		super(parentShell);
+		this.Gui = Gui;
 	}
 
 	@Override
@@ -57,6 +60,14 @@ public class Export extends Dialog{
 		label.setBounds(180, 11, 10, 15);
 		
 		Button btnSeitenverhltnisBeibehalten = new Button(container, SWT.CHECK);
+		btnSeitenverhltnisBeibehalten.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnSeitenverhltnisBeibehalten.getSelection()) {
+					ratio = (float)spinner_1.getSelection()/(float)spinner_2.getSelection();
+				}
+			}
+		});
 		btnSeitenverhltnisBeibehalten.setEnabled(false);
 		btnSeitenverhltnisBeibehalten.setBounds(11, 114, 169, 16);
 		btnSeitenverhltnisBeibehalten.setSelection(true);
@@ -69,11 +80,23 @@ public class Export extends Dialog{
 		lblNewLabel.setText("Pixelgr\u00F6\u00DFe");
 		
 		spinner_1 = new Spinner(container, SWT.BORDER);
+		spinner_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnSeitenverhltnisBeibehalten.getSelection()) getSpinner_2().setSelection((int) (spinner_1.getSelection()/ratio));
+			}
+		});
 		spinner_1.setEnabled(false);
 		spinner_1.setMaximum(2147483647);
 		spinner_1.setBounds(106, 98, 68, 22);
 		
 		spinner_2 = new Spinner(container, SWT.BORDER);
+		spinner_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnSeitenverhltnisBeibehalten.getSelection()) getSpinner_1().setSelection((int) (spinner_2.getSelection() * ratio));
+			}
+		});
 		spinner_2.setEnabled(false);
 		spinner_2.setMaximum(2147483647);
 		spinner_2.setBounds(106, 126, 68, 22);
@@ -147,10 +170,19 @@ public class Export extends Dialog{
 		spinner_1.setSelection(Gui.getCanvas().getBounds().width);
 		spinner_2.setMinimum(1);
 		spinner_2.setSelection(Gui.getCanvas().getBounds().height);
-		System.out.println(Gui.getCanvas().getBounds().height);
+		ratio = (float)Gui.getCanvas().getBounds().width/(float)Gui.getCanvas().getBounds().height;
+		System.out.println(ratio);
 		return container;
 	}
 	
+	private Spinner getSpinner_1() {
+		return spinner_1;
+	}
+
+	private Spinner getSpinner_2() {
+		return spinner_2;
+	}
+
 	private void saveInput() {
         percent = spinner.getSelection();
         width = spinner_1.getSelection();

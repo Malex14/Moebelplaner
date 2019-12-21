@@ -6,7 +6,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ItemrunderTisch extends Moebel{
 
-	public ItemrunderTisch(Canvas c,String objName) {
+	public ItemrunderTisch(Canvas c,String objName, Gui Gui) {
+		this.Gui = Gui;
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;

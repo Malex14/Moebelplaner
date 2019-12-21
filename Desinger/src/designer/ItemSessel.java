@@ -6,7 +6,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ItemSessel extends Moebel {
 
-	public ItemSessel(Canvas c,String objName) {
+	public ItemSessel(Canvas c,String objName, Gui Gui) {
+		this.Gui = Gui;
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;
