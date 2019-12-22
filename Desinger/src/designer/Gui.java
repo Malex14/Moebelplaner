@@ -56,6 +56,7 @@ import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.layout.RowLayout;
 
 
 public class Gui {
@@ -89,7 +90,6 @@ public class Gui {
 	private Text new_height;
 	private Text new_width;
 	private Group grpObjektobjektname;
-	private Button btnAutomatischbernehmen;
 	
 	/**
 	 * Launch the application.
@@ -506,22 +506,31 @@ public class Gui {
 		composite.setLayout(new FormLayout());
 		
 		Group grpMbel = new Group(composite, SWT.NONE);
+		grpMbel.setLayout(new FormLayout());
 		FormData fd_grpMbel = new FormData();
-		fd_grpMbel.right = new FormAttachment(100);
-		fd_grpMbel.bottom = new FormAttachment(100);
 		fd_grpMbel.top = new FormAttachment(0);
 		fd_grpMbel.left = new FormAttachment(0);
+		fd_grpMbel.right = new FormAttachment(100);
+		fd_grpMbel.bottom = new FormAttachment(100);
 		grpMbel.setLayoutData(fd_grpMbel);
 		grpMbel.setText("M\u00F6bel");
 		formToolkit.adapt(grpMbel);
 		formToolkit.paintBordersFor(grpMbel);
-		grpMbel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		
-		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
+		Group grpWohnen = new Group(grpMbel, SWT.NONE);
+		FormData fd_grpWohnen = new FormData();
+		fd_grpWohnen.top = new FormAttachment(0);
+		fd_grpWohnen.left = new FormAttachment(0);
+		fd_grpWohnen.bottom = new FormAttachment(0, 145);
+		fd_grpWohnen.right = new FormAttachment(100, -7);
+		grpWohnen.setLayoutData(fd_grpWohnen);
+		grpWohnen.setText("Wohnen");
+		grpWohnen.setLayout(new RowLayout(SWT.HORIZONTAL));
+		formToolkit.adapt(grpWohnen);
+		formToolkit.paintBordersFor(grpWohnen);
 		
 
-		Button btnCreateTisch = formToolkit.createButton(grpMbel, "Tisch", SWT.NONE);
+		Button btnCreateTisch = formToolkit.createButton(grpWohnen, "Tisch", SWT.NONE);
 		btnCreateTisch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -541,11 +550,7 @@ public class Gui {
 			}
 		});
 		
-		
-		FormData fd_scale = new FormData();
-		fd_scale.top = new FormAttachment(grpMbel, 118);
-		
-		Button btnCreateRunderTisch = new Button(grpMbel, SWT.NONE);
+		Button btnCreateRunderTisch = new Button(grpWohnen, SWT.NONE);
 		btnCreateRunderTisch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -567,29 +572,7 @@ public class Gui {
 		formToolkit.adapt(btnCreateRunderTisch, true, true);
 		btnCreateRunderTisch.setText("runder Tisch");
 		
-		Button btnCreateWaschmaschine = new Button(grpMbel, SWT.NONE);
-		btnCreateWaschmaschine.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
-					
-					@Override
-					public String isValid(String arg0) {
-						if(arg0 != "")return null;
-						else return "";
-					}
-				});
-				dialog.open();
-				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemWaschmaschine(getCanvas(),dialog.getValue(), window));
-					moebel.get(moebel.size()-1).testMethode();
-				}
-			}
-		});
-		formToolkit.adapt(btnCreateWaschmaschine, true, true);
-		btnCreateWaschmaschine.setText("Waschmaschine");
-		
-		Button btnSchreibtisch = new Button(grpMbel, SWT.NONE);
+		Button btnSchreibtisch = new Button(grpWohnen, SWT.NONE);
 		btnSchreibtisch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -611,51 +594,7 @@ public class Gui {
 		formToolkit.adapt(btnSchreibtisch, true, true);
 		btnSchreibtisch.setText("Schreibtisch");
 		
-		Button btnHocker = new Button(grpMbel, SWT.NONE);
-		btnHocker.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
-					
-					@Override
-					public String isValid(String arg0) {
-						if(arg0 != "")return null;
-						else return "";
-					}
-				});
-				dialog.open();
-				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemHocker(getCanvas(),dialog.getValue(), window));
-					moebel.get(moebel.size()-1).testMethode();
-				}
-			}
-		});
-		formToolkit.adapt(btnHocker, true, true);
-		btnHocker.setText("Hocker");
-		
-		Button btnSessel = new Button(grpMbel, SWT.NONE);
-		btnSessel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
-					
-					@Override
-					public String isValid(String arg0) {
-						if(arg0 != "")return null;
-						else return "";
-					}
-				});
-				dialog.open();
-				if(dialog.getReturnCode() == 0) {
-					moebel.add(new ItemSessel(getCanvas(),dialog.getValue(), window));
-					moebel.get(moebel.size()-1).testMethode();
-				}
-			}
-		});
-		formToolkit.adapt(btnSessel, true, true);
-		btnSessel.setText("Sessel");
-		
-		Button btnSofa = new Button(grpMbel, SWT.NONE);
+		Button btnSofa = new Button(grpWohnen, SWT.NONE);
 		btnSofa.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -677,7 +616,73 @@ public class Gui {
 		formToolkit.adapt(btnSofa, true, true);
 		btnSofa.setText("Sofa");
 		
-		Button btnSideboard = new Button(grpMbel, SWT.NONE);
+		Button btnSessel = new Button(grpWohnen, SWT.NONE);
+		btnSessel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemSessel(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnSessel, true, true);
+		btnSessel.setText("Sessel");
+		
+		Button btnHocker = new Button(grpWohnen, SWT.NONE);
+		btnHocker.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemHocker(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnHocker, true, true);
+		btnHocker.setText("Hocker");
+		
+		Button btnSchrankelement = new Button(grpWohnen, SWT.NONE);
+		btnSchrankelement.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemSchrankelement(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnSchrankelement, true, true);
+		btnSchrankelement.setText("Schrankelement");
+		
+		Button btnSideboard = new Button(grpWohnen, SWT.NONE);
 		btnSideboard.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -699,25 +704,228 @@ public class Gui {
 		formToolkit.adapt(btnSideboard, true, true);
 		btnSideboard.setText("Sideboard");
 		
-		Button btnBett = new Button(grpMbel, SWT.NONE);
+		
+		FormData fd_scale = new FormData();
+		fd_scale.top = new FormAttachment(grpMbel, 118);
+		
+		Button btnFluegel = new Button(grpWohnen, SWT.NONE);
+		btnFluegel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemFluegel(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnFluegel, true, true);
+		btnFluegel.setText("Fl\u00FCgel");
+		
+		
+		Button btntestObjekt = formToolkit.createButton(grpMbel, "testObjekt", SWT.NONE);
+		FormData fd_btntestObjekt = new FormData();
+		fd_btntestObjekt.bottom = new FormAttachment(100, -10);
+		fd_btntestObjekt.right = new FormAttachment(100, -31);
+		btntestObjekt.setLayoutData(fd_btntestObjekt);
+		
+		Group grpSchlafen = new Group(grpMbel, SWT.NONE);
+		grpSchlafen.setLayout(new RowLayout(SWT.HORIZONTAL));
+		FormData fd_grpSchlafen = new FormData();
+		fd_grpSchlafen.right = new FormAttachment(grpWohnen, 0, SWT.RIGHT);
+		fd_grpSchlafen.top = new FormAttachment(0, 151);
+		fd_grpSchlafen.left = new FormAttachment(0);
+		grpSchlafen.setLayoutData(fd_grpSchlafen);
+		grpSchlafen.setText("Schlafen");
+		formToolkit.adapt(grpSchlafen);
+		formToolkit.paintBordersFor(grpSchlafen);
+		
+		Group group = new Group(grpMbel, SWT.NONE);
+		group.setText("Schlafen");
+		group.setLayout(new RowLayout(SWT.HORIZONTAL));
+		FormData fd_group = new FormData();
+		fd_group.top = new FormAttachment(0, 235);
+		fd_group.right = new FormAttachment(100, -9);
+		fd_group.left = new FormAttachment(0, 6);
+		group.setLayoutData(fd_group);
+		formToolkit.adapt(group);
+		formToolkit.paintBordersFor(group);
+		
+		Button btnBett = new Button(grpSchlafen, SWT.NONE);
+		btnBett.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemBett(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
 		formToolkit.adapt(btnBett, true, true);
 		btnBett.setText("Bett");
 		
-		Button btnSchrankelement = new Button(grpMbel, SWT.NONE);
-		formToolkit.adapt(btnSchrankelement, true, true);
-		btnSchrankelement.setText("Schrankelement");
-		
-		Button btnNachttisch = new Button(grpMbel, SWT.NONE);
-		formToolkit.adapt(btnNachttisch, true, true);
-		btnNachttisch.setText("Nachttisch");
-		
-		Button btnDoppelbett = new Button(grpMbel, SWT.NONE);
+		Button btnDoppelbett = new Button(grpSchlafen, SWT.NONE);
+		btnDoppelbett.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemDoppelbett(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
 		formToolkit.adapt(btnDoppelbett, true, true);
 		btnDoppelbett.setText("Doppelbett");
 		
-		Button btnBadewanne = new Button(grpMbel, SWT.NONE);
+		Button btnNachttisch = new Button(grpSchlafen, SWT.NONE);
+		btnNachttisch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemNachttisch(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnNachttisch, true, true);
+		btnNachttisch.setText("Nachttisch");
+		group.setLayoutData(fd_group);
+		formToolkit.adapt(group);
+		formToolkit.paintBordersFor(group);
+		
+		Button btnBadewanne = new Button(group, SWT.NONE);
+		btnBadewanne.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemBadewanne(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
 		formToolkit.adapt(btnBadewanne, true, true);
 		btnBadewanne.setText("Badewanne");
+		
+		Button btnDusche = new Button(group, SWT.NONE);
+		btnDusche.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemDusche(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnDusche, true, true);
+		btnDusche.setText("Dusche");
+		
+		Button btnCreateWaschmaschine = new Button(group, SWT.NONE);
+		btnCreateWaschmaschine.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new ItemWaschmaschine(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+				}
+			}
+		});
+		formToolkit.adapt(btnCreateWaschmaschine, true, true);
+		btnCreateWaschmaschine.setText("Waschmaschine");
+		
+		Group grpKochen = new Group(grpMbel, SWT.NONE);
+		grpKochen.setText("Kochen");
+		grpKochen.setLayout(new RowLayout(SWT.HORIZONTAL));
+		FormData fd_grpKochen = new FormData();
+		fd_grpKochen.bottom = new FormAttachment(group, 73, SWT.BOTTOM);
+		fd_grpKochen.top = new FormAttachment(group, 6);
+		fd_grpKochen.left = new FormAttachment(grpWohnen, 0, SWT.LEFT);
+		fd_grpKochen.right = new FormAttachment(100, -7);
+		grpKochen.setLayoutData(fd_grpKochen);
+		formToolkit.adapt(grpKochen);
+		formToolkit.paintBordersFor(grpKochen);
+		
+		
+		btntestObjekt.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
+					
+					@Override
+					public String isValid(String arg0) {
+						if(arg0 != "")return null;
+						else return "";
+					}
+				});
+				dialog.open();
+				if(dialog.getReturnCode() == 0) {
+					moebel.add(new TestObjekt(getCanvas(),dialog.getValue(), window));
+					moebel.get(moebel.size()-1).testMethode();
+					
+				}
+			}
+		});
 		fd_scale.left = new FormAttachment(0, 32);
 		
 		TabItem tbtmObjekte = new TabItem(tabFolder, SWT.NONE);
@@ -767,19 +975,7 @@ public class Gui {
 		lblX.setText("X:");
 		
 		new_x = new Text(grpPosition, SWT.BORDER);
-		new_x.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				if(btnAutomatischbernehmen.getSelection()) {
-					for (Moebel moebel2 : moebel) {
-						if(moebel2.isHighlighted()) {
-							try {
-							moebel2.setX(Integer.parseInt(new_x.getText()));
-							}catch (NumberFormatException e) {}
-						}
-					}
-				}
-			}
-		});
+		
 		new_x.setBounds(26, 48, 194, 21);
 		formToolkit.adapt(new_x, true, true);
 		
@@ -802,19 +998,6 @@ public class Gui {
 		formToolkit.adapt(lblWinkel, true, true);
 		
 		new_name = new Text(grpPosition, SWT.BORDER);
-		new_name.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				if(btnAutomatischbernehmen.getSelection()) {
-					for (Moebel moebel2 : moebel) {
-						if(moebel2.isHighlighted()) {
-							grpObjektobjektname.setText("Objekt: " + new_name.getText());
-							moebel2.setName(new_name.getText());
-						}
-						
-					}
-				}
-			}
-		});
 		new_name.setBounds(48, 21, 172, 21);
 		formToolkit.adapt(new_name, true, true);
 		
@@ -1053,27 +1236,6 @@ public class Gui {
 		canvas.setLayoutData(fd_canvas);
 		formToolkit.adapt(canvas);
 		formToolkit.paintBordersFor(canvas);
-		
-		
-		btntestObjekt.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				InputDialog dialog = new InputDialog(shlMbelplaner, newItemDialog[0], newItemDialog[1], "", new IInputValidator() {
-					
-					@Override
-					public String isValid(String arg0) {
-						if(arg0 != "")return null;
-						else return "";
-					}
-				});
-				dialog.open();
-				if(dialog.getReturnCode() == 0) {
-					moebel.add(new TestObjekt(getCanvas(),dialog.getValue(), window));
-					moebel.get(moebel.size()-1).testMethode();
-					
-				}
-			}
-		});
 		
 		shlMbelplaner.addListener(SWT.Close, new Listener() {
 		      public void handleEvent(Event event) {

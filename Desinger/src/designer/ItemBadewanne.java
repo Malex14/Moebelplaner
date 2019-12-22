@@ -12,8 +12,8 @@ public class ItemBadewanne extends Moebel {
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;
-		x = 50;
-		y = 50;
+		x = 120;
+		y = 70;
 		origWidth = width = 180;
 		origHeight = height = 80;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Badewanne.png");

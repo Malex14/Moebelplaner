@@ -12,7 +12,7 @@ public class ItemSchrankelement extends Moebel {
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;
-		x = 50;
+		x = 70;
 		y = 50;
 		origWidth = width = 110;
 		origHeight = height = 60;

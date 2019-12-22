@@ -11,8 +11,8 @@ public class ItemSchreibtisch extends Moebel {
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;
-		x = 50;
-		y = 50;
+		x = 100;
+		y = 70;
 		origWidth = width = 180;
 		origHeight = height = 90;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Schreibtisch.png");

@@ -11,8 +11,8 @@ public class ItemBett extends Moebel {
 		Gui.sethasChanged(true);
 		name = objName; 
 		canvas = c;
-		x = 50;
-		y = 50;
+		x = 140;
+		y = 100;
 		origWidth = width = 220;
 		origHeight = height = 160;
 		image = SWTResourceManager.getImage(Gui.class, "/moebel/Bett.png");
