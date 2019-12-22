@@ -173,6 +173,21 @@ public class SWTResourceManager {
 	 * @return the small {@link Image} that can be used as placeholder for missing image.
 	 */
 	private static Image getMissingImage() {
+		String path = "assets/missing.png";
+		Image image = m_imageMap.get(path);
+		if (image == null) {
+			try {
+				image = getImage(new FileInputStream(path));
+				m_imageMap.put(path, image);
+			} catch (Exception e) {
+				image = getMissingImageImage();
+				m_imageMap.put(path, image);
+			}
+		}
+		return image;
+	}
+	
+	private static Image getMissingImageImage() {
 		Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
 		//
 		GC gc = new GC(image);

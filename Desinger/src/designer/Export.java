@@ -36,6 +36,7 @@ public class Export extends Dialog{
 		newShell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 		newShell = new Shell();
 		newShell.setSize(280, 245);
+		
 
 	}
 	
@@ -44,7 +45,7 @@ public class Export extends Dialog{
 		parent.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 		Composite container = (Composite) super.createDialogArea(parent);
 		container.setLayout(null);
-	
+		
 		
 		
 		spinner = new Spinner(container, SWT.BORDER);
@@ -171,7 +172,6 @@ public class Export extends Dialog{
 		spinner_2.setMinimum(1);
 		spinner_2.setSelection(Gui.getCanvas().getBounds().height);
 		ratio = (float)Gui.getCanvas().getBounds().width/(float)Gui.getCanvas().getBounds().height;
-		System.out.println(ratio);
 		return container;
 	}
 	
@@ -208,4 +208,5 @@ public class Export extends Dialog{
 	        saveInput();
 	        super.okPressed();
 	    }
+	 
 }

@@ -1,8 +1,11 @@
-package designer;
+package moebel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import designer.Gui;
+import designer.Moebel;
 
 public class ItemTisch extends Moebel{
 
