@@ -5,8 +5,9 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import designer.Gui;
+import designer.Moebel;
 
-public class ItemWaschbecken extends designer.Moebel {
+public class ItemWaschbecken extends Moebel {
 
 	public ItemWaschbecken(Canvas c,String objName, Gui Gui) {
 		this.Gui = Gui;

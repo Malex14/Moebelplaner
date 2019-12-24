@@ -48,9 +48,37 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import moebel.*;
-
+import moebel.ItemArbeitsflaeche;
+import moebel.ItemBadewanne;
+import moebel.ItemBett;
+import moebel.ItemDoppelbett;
+import moebel.ItemDusche;
+import moebel.ItemElektrobackofen;
+import moebel.ItemElektroherd;
+import moebel.ItemFernseher;
+import moebel.ItemFluegel;
+import moebel.ItemGaderobe;
+import moebel.ItemGefrierschrank;
+import moebel.ItemGeschirrspuelmaschine;
+import moebel.ItemHeizkoerper;
+import moebel.ItemHocker;
+import moebel.ItemKlavier;
+import moebel.ItemKuehlschrank;
+import moebel.ItemNachttisch;
+import moebel.ItemSchrankelement;
+import moebel.ItemSchreibtisch;
+import moebel.ItemSessel;
+import moebel.ItemSideboard;
+import moebel.ItemSofa;
+import moebel.ItemSpuele;
+import moebel.ItemSpuelklosett;
+import moebel.ItemSpuelklosettKasten;
+import moebel.ItemStuhl;
+import moebel.ItemTisch;
+import moebel.ItemVorhang;
+import moebel.ItemWaschbecken;
+import moebel.ItemWaschmaschine;
+import moebel.ItemrunderTisch;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -208,7 +236,7 @@ public class Gui {
             		moebel = new ArrayList<Moebel>();
             		for (int i = 0; i < ja.length(); i++) {
             			JSONObject jo = new JSONObject(ja.get(i).toString());
-            			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {getCanvas(),jo.getString("name")}));
+            			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class,Gui.class}).newInstance(new Object[] {getCanvas(),jo.getString("name"),window}));
             			Moebel tmp = moebel.get(moebel.size()-1);
             			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("origWidth"), jo.getInt("origHeight") , jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"), jo.getFloat("xScale"), jo.getFloat("yScale")); 
             		}
@@ -1618,7 +1646,7 @@ public class Gui {
         		moebel = new ArrayList<Moebel>();
         		for (int i = 0; i < ja.length(); i++) {
         			JSONObject jo = new JSONObject(ja.get(i).toString());
-        			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class}).newInstance(new Object[] {getCanvas(),jo.getString("name")}));
+        			moebel.add((Moebel)Class.forName(jo.getString("type")).getDeclaredConstructor(new Class[] {Canvas.class,String.class,Gui.class}).newInstance(new Object[] {getCanvas(),jo.getString("name"),window}));
         			Moebel tmp = moebel.get(moebel.size()-1);
         			tmp.setAll(jo.getInt("x"), jo.getInt("y"), jo.getInt("width"), jo.getInt("height"), jo.getInt("origWidth"), jo.getInt("origHeight") , jo.getInt("angle"), jo.getBoolean("hasPaintListener"), jo.getBoolean("highlight"), jo.getFloat("scale"), jo.getFloat("yScale"));
         		}
